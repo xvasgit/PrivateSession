@@ -1,0 +1,13 @@
+# Risk Register — Top Five Priorities
+
+Scale: likelihood and impact each 1 (low) to 5 (high); score = likelihood × impact. Rankings are design estimates for the intended desktop product, not measured incident frequencies. Ties prioritize direct content exposure. Owner: engineering/security agent, with user review before real capture.
+
+| Rank / ID | Threats | Likelihood and product-specific rationale | Impact and rationale | Score | Mitigation / milestone / acceptance |
+|---|---|---|---|---|---|
+| 1 / R-01 Excess content capture or export | T-02/T-07 | 4: snapshots/system audio can include unrelated content in a lecture or client call | 5: screen/audio can expose private third-party data | 20 | Before capture: default sources off until explicit choice, visible recording, redaction/retention controls; test selected sources and exact export fields |
+| 2 / R-03 Vault/key/index disclosure or tampering | T-04/T-05/T-08 | 4: future storage, logs, indexes and temp files create multiple plaintext paths | 5: recordings and derived notes may all be exposed | 20 | Tugas 2 vault: durable key custody, AEAD/session binding, protected indexes, no-secret scans; test mutations, wrong keys, locked reads and deletion paths. Current AEAD is groundwork only |
+| 3 / R-02 Capture without valid consent or truthful state | T-01/T-03/T-12 | 3: asynchronous device/UI state can diverge; checkbox alone is insufficient | 5: recording can violate participant expectations and expose sensitive content | 15 | Before capture: enforce native consent token, recording state, stop behavior and notice version; test permission denial/revocation and stop on app exit |
+| 4 / R-04 Native privilege, model or instruction compromise | T-01/T-06/T-10/T-11 | 3: IPC, model dependencies and untrusted OCR expand the desktop boundary | 5: arbitrary file reads/exports could disclose the full vault | 15 | Before native release: restrictive IPC permissions, model integrity verification, no automatic model tools/export, dependency review; test denied paths and hostile transcript instructions |
+| 5 / R-05 Resource exhaustion/data loss | T-09 | 4: long recordings plus frequent OCR/transcription compete for local resources | 3: lost notes and unresponsive UI undermine meeting continuity | 12 | Before capture/inference: queue bounds, disk quotas, cancellation and graceful stop; test low disk, oversized input and stalled model |
+
+Current controls: synthetic-only fixtures, clear prototype labels, validation/consent gating, loopback dev server, secret ignore rules, and temporary authenticated encryption. No risk is marked resolved. Product-specific validation and residual-risk review are required before capturing or storing real meetings.

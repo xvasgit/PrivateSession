@@ -1,0 +1,30 @@
+# Dependencies and generated application output
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+
+# Local configuration and cryptographic secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Local tooling and operating-system files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+
+# Others
+/docs/tugas-1-checklist.md
+/docs/evidence/verification.md
