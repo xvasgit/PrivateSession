@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 980" width="100%" height="100%">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="arrow-grey" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <style>
+    .title { font-family: system-ui, -apple-system, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+    .subtitle { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; fill: #475569; }
+    .legend-title { font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 700; fill: #0f766e; }
+    .legend-label { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-style: italic; fill: #334155; }
+    .entity-text { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+    .process-text { font-family: system-ui, -apple-system, sans-serif; font-size: 13px; font-weight: 600; fill: #042f2e; text-anchor: middle; }
+    .process-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #0f766e; text-anchor: middle; }
+    .store-text { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; font-weight: 600; fill: #0f172a; text-anchor: middle; }
+    .store-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #475569; text-anchor: middle; }
+    .flow-label { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 600; fill: #991b1b; }
+    .flow-sub { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; fill: #b91c1c; }
+    .flow-grey { font-family: system-ui, -apple-system, sans-serif; font-size: 10.5px; fill: #64748b; font-style: italic; }
+    .tb-label { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; font-weight: 700; fill: #b45309; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tb-planned-label { font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px; font-weight: 700; fill: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge-crypto { font-family: system-ui, -apple-system, sans-serif; font-size: 9.5px; font-weight: 700; fill: #0f766e; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  <!-- Diagram Title Header -->
+  <text x="32" y="38" class="title">PrivateSession — Data Flow Diagram (DFD Level 0)</text>
+  <text x="32" y="58" class="subtitle">Shostack (2014) Threat Modeling Notation · Running Product Boundary &amp; Planned Desktop Extensions</text>
+
+  <!-- ==================== LEFT LEGEND BOX (Shostack 2014) ==================== -->
+  <g transform="translate(32, 80)">
+    <rect width="210" height="430" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="18" y="28" class="legend-title">DFD Notation (Shostack)</text>
+
+    <!-- External Entity Notation -->
+    <rect x="20" y="50" width="70" height="38" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+    <text x="105" y="74" class="legend-label">External entity</text>
+
+    <!-- Process Notation -->
+    <ellipse cx="55" cy="130" rx="36" ry="22" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5"/>
+    <text x="105" y="135" class="legend-label">Process</text>
+
+    <!-- Data Store Notation (Two parallel open lines) -->
+    <line x1="20" y1="185" x2="90" y2="185" stroke="#0f766e" stroke-width="2.5"/>
+    <line x1="20" y1="215" x2="90" y2="215" stroke="#0f766e" stroke-width="2.5"/>
+    <text x="105" y="205" class="legend-label">Data store</text>
+
+    <!-- Data Flow Notation -->
+    <line x1="20" y1="258" x2="88" y2="258" stroke="#b91c1c" stroke-width="2" marker-end="url(#arrow-red)"/>
+    <text x="105" y="262" class="legend-label" fill="#991b1b">Data flow</text>
+
+    <!-- Trust Boundary Notation -->
+    <rect x="20" y="295" width="70" height="34" rx="6" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="105" y="316" class="legend-label" fill="#b45309">Trust boundary</text>
+
+    <!-- Crypto Marker Notation -->
+    <rect x="20" y="352" width="70" height="24" rx="4" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+    <text x="26" y="368" class="badge-crypto">🔒 CRYPTO</text>
+    <text x="105" y="369" class="legend-label" fill="#0f766e">Crypto protected</text>
+
+    <line x1="15" y1="395" x2="195" y2="395" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="18" y="415" font-family="sans-serif" font-size="10px" fill="#64748b">Tugas 1: Verified at sec-0.1</text>
+  </g>
+
+  <!-- ==================== TB3: DEVELOPER WORKSTATION BOUNDARY ==================== -->
+  <rect x="265" y="80" width="820" height="870" rx="16" fill="#fafafa" stroke="#d97706" stroke-width="2" stroke-dasharray="8,5"/>
+  <text x="285" y="105" class="tb-label">TB3: Workstation Host Boundary (Local loopback ↔ Internet / External)</text>
+
+  <!-- External Entity E4: npm Registry -->
+  <rect x="300" y="130" width="160" height="52" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#card-shadow)"/>
+  <text x="380" y="154" class="entity-text">E4: npm Registry</text>
+  <text x="380" y="170" class="store-sub">registry.npmjs.org</text>
+
+  <!-- Process P4: Build & VCS Tooling -->
+  <ellipse cx="610" cy="156" rx="90" ry="34" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <text x="610" y="152" class="process-text">P4: Build &amp; VCS Tooling</text>
+  <text x="610" y="168" class="process-sub">Node 24 · npm 11 · next build</text>
+
+  <!-- External Entity E3: GitHub Remote & Actions -->
+  <rect x="850" y="130" width="180" height="52" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#card-shadow)"/>
+  <text x="940" y="154" class="entity-text">E3: GitHub Remote</text>
+  <text x="940" y="170" class="store-sub">xvasgit/PrivateSession (CI)</text>
+
+  <!-- Data Store D4: Workspace Repository -->
+  <line x1="310" y1="240" x2="480" y2="240" stroke="#0f766e" stroke-width="2.5"/>
+  <line x1="310" y1="285" x2="480" y2="285" stroke="#0f766e" stroke-width="2.5"/>
+  <text x="395" y="258" class="store-text">D4: Workspace Files</text>
+  <text x="395" y="274" class="store-sub">Source, lockfile, .env.example</text>
+
+  <!-- Data Store D1: Static Export Build -->
+  <line x1="530" y1="240" x2="690" y2="240" stroke="#0f766e" stroke-width="2.5"/>
+  <line x1="530" y1="285" x2="690" y2="285" stroke="#0f766e" stroke-width="2.5"/>
+  <text x="610" y="258" class="store-text">D1: Static Build (out/)</text>
+  <text x="610" y="274" class="store-sub">HTML, client JS, synthetic fixtures</text>
+
+  <!-- Process P1: Static Web Server -->
+  <ellipse cx="610" cy="355" rx="85" ry="32" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <text x="610" y="351" class="process-text">P1: Static Server</text>
+  <text x="610" y="367" class="process-sub">serve out --listen 127.0.0.1:3000</text>
+
+
+  <!-- ==================== TB1: BROWSER ORIGIN SANDBOX ==================== -->
+  <rect x="290" y="440" width="770" height="485" rx="14" fill="#ffffff" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="310" y="465" class="tb-label">TB1: Browser Origin Sandbox (Origin: http://127.0.0.1:3000)</text>
+
+  <!-- External Entity E1: Local User -->
+  <rect x="310" y="495" width="160" height="52" fill="#f8fafc" stroke="#0f766e" stroke-width="2" filter="url(#card-shadow)"/>
+  <text x="390" y="519" class="entity-text">E1: Local User</text>
+  <text x="390" y="535" class="store-sub">Keyboard, mouse, display</text>
+
+  <!-- External Entity E2: Local File System -->
+  <rect x="310" y="620" width="160" height="52" fill="#f8fafc" stroke="#0f766e" stroke-width="2" filter="url(#card-shadow)"/>
+  <text x="390" y="644" class="entity-text">E2: Local File System</text>
+  <text x="390" y="660" class="store-sub">User file picker (no read)</text>
+
+  <!-- Process P2: Web UI Client Component -->
+  <ellipse cx="610" cy="575" rx="98" ry="42" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <text x="610" y="570" class="process-text">P2: Web UI Component</text>
+  <text x="610" y="586" class="process-sub">LiveSetupForm / UploadReview</text>
+
+  <!-- Data Store D2: Browser Memory UI State (shifted right and up for clean separation) -->
+  <line x1="860" y1="480" x2="1040" y2="480" stroke="#0f766e" stroke-width="2.5"/>
+  <line x1="860" y1="530" x2="1040" y2="530" stroke="#0f766e" stroke-width="2.5"/>
+  <text x="950" y="502" class="store-text">D2: In-Memory UI State</text>
+  <text x="950" y="518" class="store-sub">Draft inputs, artifact ID, envelope</text>
+
+  <!-- Process P3: Workflow Encryption Adapter -->
+  <ellipse cx="610" cy="745" rx="92" ry="34" fill="#f0fdfa" stroke="#0f766e" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <text x="610" y="740" class="process-text">P3: Crypto Adapter</text>
+  <text x="610" y="756" class="process-sub">workflow-encryption.ts</text>
+
+  <!-- ==================== TB2: WEB CRYPTO KEY BOUNDARY ==================== -->
+  <rect x="800" y="665" width="240" height="195" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="815" y="688" class="tb-label" fill="#0f766e">TB2: Web Crypto Sandbox</text>
+  <text x="815" y="702" font-family="sans-serif" font-size="9.5px" fill="#0f766e">Non-exportable CryptoKey Handle</text>
+
+  <!-- Data Store D3: Temporary Key (CRYPTO) -->
+  <line x1="820" y1="730" x2="1020" y2="730" stroke="#0f766e" stroke-width="2.5"/>
+  <line x1="820" y1="785" x2="1020" y2="785" stroke="#0f766e" stroke-width="2.5"/>
+  <text x="920" y="752" class="store-text">D3: Temporary Key 🔒</text>
+  <text x="920" y="768" class="store-sub">AES-256 (extractable: false)</text>
+  <rect x="860" y="798" width="120" height="20" rx="4" fill="#ccfbf1" stroke="#0f766e" stroke-width="1"/>
+  <text x="872" y="812" class="badge-crypto">🔒 AES-256-GCM</text>
+
+
+  <!-- ==================== DATA FLOWS (RUNNING PRODUCT) ==================== -->
+  <!-- F7: npm packages -->
+  <path d="M 460 156 L 520 156" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="466" y="148" class="flow-label">F7: packages</text>
+
+  <!-- F9: git push -->
+  <path d="M 700 156 L 850 156" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="735" y="148" class="flow-label">F9: git push</text>
+
+  <!-- F8: read source -->
+  <path d="M 480 255 L 560 185" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="475" y="215" class="flow-label">F8: read source</text>
+
+  <!-- F6: next build -->
+  <path d="M 610 190 L 610 240" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="618" y="218" class="flow-label">F6: next build</text>
+
+  <!-- F5: read static files -->
+  <path d="M 610 285 L 610 323" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="618" y="308" class="flow-label">F5: read bundle</text>
+
+  <!-- F4: serve HTML/JS over HTTP -->
+  <path d="M 610 387 L 610 533" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="618" y="420" class="flow-label">F4: HTTP 200 (HTML/JS)</text>
+  <text x="618" y="432" class="flow-sub">127.0.0.1:3000 loopback</text>
+
+  <!-- F1: user inputs (from E1 to P2) -->
+  <path d="M 470 512 L 530 545" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="455" y="495" class="flow-label">F1: title, context, consent</text>
+
+  <!-- F3: UI displays (from P2 to E1) -->
+  <path d="M 520 575 L 470 540" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="430" y="585" class="flow-label">F3: previews &amp; status</text>
+
+  <!-- F2: file metadata (from E2 to P2) -->
+  <path d="M 470 642 L 525 610" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="330" y="695" class="flow-label">F2: name, size, type (metadata only)</text>
+  <text x="330" y="708" class="flow-sub">(zero content reads)</text>
+
+  <!-- F14: UI state access (two-way between P2 and D2) -->
+  <path d="M 708 555 L 855 500" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <path d="M 855 510 L 708 568" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="730" y="520" class="flow-label">F14: read/write UI state</text>
+
+  <!-- F11: snapshot JSON (from P2 down to P3) -->
+  <path d="M 590 617 L 590 711" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="470" y="660" class="flow-label">F11: snapshot JSON</text>
+  <text x="470" y="672" class="flow-sub">draft or sample payload</text>
+
+  <!-- F13: envelope return (from P3 up to P2) -->
+  <path d="M 630 711 L 630 617" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="638" y="660" class="flow-label">F13: envelope + ID 🔒</text>
+  <text x="638" y="672" class="flow-sub">AES-256-GCM authenticated</text>
+
+  <!-- F12: Web Crypto generateKey, encrypt, decrypt -->
+  <path d="M 702 745 L 820 745" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <path d="M 820 760 L 702 760" fill="none" stroke="#b91c1c" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+  <text x="715" y="735" class="flow-label">F12: key use &amp; round trip 🔒</text>
+  <text x="715" y="775" class="flow-sub">generateKey · encrypt · decrypt</text>
+
+
+  <!-- ==================== RIGHT PANEL: PLANNED DESKTOP ARCHITECTURE ==================== -->
+  <g transform="translate(1120, 80)">
+    <!-- TB4: Native IPC Boundary -->
+    <rect width="360" height="870" rx="16" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,4"/>
+    <text x="18" y="28" class="tb-planned-label">TB4: Native Desktop Boundary (PLANNED)</text>
+    <text x="18" y="44" font-family="sans-serif" font-size="10.5px" fill="#64748b">Future Desktop Shell (Tauri / Rust Core)</text>
+
+    <!-- External Entity E5: Audio/Screen Sources -->
+    <rect x="25" y="70" width="310" height="48" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="180" y="94" class="entity-text" fill="#475569">E5: Meeting Participants &amp; Devices</text>
+    <text x="180" y="108" class="store-sub">Mic, system audio, screen frames</text>
+
+    <!-- Process P5: Native Capture Controller -->
+    <ellipse cx="180" cy="180" rx="120" ry="28" fill="#ffffff" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="177" class="process-text" fill="#475569">P5: Capture Controller</text>
+    <text x="180" y="191" class="process-sub" fill="#64748b">Native permissions &amp; indicator</text>
+
+    <!-- Data Store D7: Local Model Weights -->
+    <line x1="40" y1="260" x2="320" y2="260" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <line x1="40" y1="295" x2="320" y2="295" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="277" class="store-text" fill="#475569">D7: Local Models (Planned)</text>
+    <text x="180" y="290" class="store-sub">ASR (Whisper) &amp; Small LLM weights</text>
+
+    <!-- Process P6: On-Device ASR / LLM -->
+    <ellipse cx="180" cy="370" rx="120" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="367" class="process-text" fill="#475569">P6: On-Device AI Engine</text>
+    <text x="180" y="381" class="process-sub" fill="#64748b">Local transcription &amp; summaries</text>
+
+    <!-- Process P7: Encrypted Vault Controller -->
+    <ellipse cx="180" cy="500" rx="120" ry="30" fill="#ffffff" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="497" class="process-text" fill="#475569">P7: Vault &amp; Export Controller</text>
+    <text x="180" y="511" class="process-sub" fill="#64748b">Lifecycle, key custody, export gate</text>
+
+    <!-- Data Store D6: OS Key Custody -->
+    <line x1="40" y1="585" x2="320" y2="585" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <line x1="40" y1="620" x2="320" y2="620" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="602" class="store-text" fill="#475569">D6: OS Key Custody 🔒</text>
+    <text x="180" y="615" class="store-sub">DPAPI / SecretService (Planned)</text>
+
+    <!-- Data Store D5: Encrypted Session Vault -->
+    <line x1="40" y1="680" x2="320" y2="680" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <line x1="40" y1="715" x2="320" y2="715" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="180" y="697" class="store-text" fill="#475569">D5: Encrypted Vault 🔒</text>
+    <text x="180" y="710" class="store-sub">AEAD SQLite / Encrypted files</text>
+
+    <!-- External Entity E6: Export Recipient -->
+    <rect x="25" y="780" width="310" height="48" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="180" y="804" class="entity-text" fill="#475569">E6: Explicit Export Recipient</text>
+    <text x="180" y="818" class="store-sub">User-confirmed recipient only</text>
+
+    <!-- Planned Flows -->
+    <path d="M 180 118 L 180 152" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="138" class="flow-grey">F15: audio &amp; frames</text>
+
+    <path d="M 180 208 L 180 260" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="235" class="flow-grey">F16: raw stream</text>
+
+    <path d="M 180 295 L 180 340" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="320" class="flow-grey">F17: model access</text>
+
+    <path d="M 180 400 L 180 470" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="440" class="flow-grey">F18: structured notes</text>
+
+    <path d="M 180 530 L 180 585" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="560" class="flow-grey">F19: master key</text>
+
+    <path d="M 180 620 L 180 680" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="650" class="flow-grey">F20: sealed records</text>
+
+    <path d="M 180 715 L 180 780" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow-grey)"/>
+    <text x="185" y="750" class="flow-grey">F21: user export</text>
+  </g>
+
+  <!-- Cross-Boundary Command from P2 to Planned P5 (clean arc over bottom of canvas) -->
+  <path d="M 708 590 C 850 630, 1100 280, 1290 205" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-grey)"/>
+  <text x="1000" y="380" class="flow-grey">F22: capture command (planned)</text>
+
+</svg>

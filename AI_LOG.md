@@ -89,3 +89,35 @@
 - Output: Updated shared header, Overview branding, page metadata, README, requirements, and outer guidance; synchronized npm manifest/lockfile name to `private-session`.
 - Verification: `npm run check` passed lint/types/formatting and 44 unit tests; production build passed. Inspected all three exported HTML pages for the new title/header and checked package-name consistency. Existing behavior tests were reused; no new tests added for text changes.
 - Preservation / human review: Historical logs, PDF/screenshots, directory name, and Git state remain unchanged. Human branding review and refreshed submission evidence remain pending.
+
+## 2026-10-13 — GitHub Actions CI Failure Diagnosis & Lockfile Sync
+
+- Tool / Agent: Antigravity, Documentation Specialist & Knowledge Architect.
+- User prompt / purpose: Diagnose GitHub Actions CI failure ("Quality checks / verify (push) Failing after 6s") following remote push to `xvasgit/PrivateSession`.
+- Diagnosis / output: Queried GitHub Actions runs API (run `38422297853`); identified Step 4 (`npm ci`) exiting with code 1 due to lockfile desynchronization (missing nested entries under `@tailwindcss/oxide-wasm32-wasi`).
+- Verification / resolution: Ran `npm install --package-lock-only` to update `package-lock.json`; verified `npm ci --dry-run` and full `npm run check` (44/44 unit tests, TypeScript strict, ESLint, Prettier) passing 100%.
+- Human verification / edits: Pending user confirmation to commit and push updated `package-lock.json`.
+
+## 2026-10-14 — KKSiber Tugas 1 Deliverables Audit & Alignment
+
+- Tool / Agent: Antigravity, Documentation Specialist & Knowledge Architect.
+- User prompt / purpose: Check readiness and status of deliverables for KKSiber (Keamanan Komputasi dan Siber) Tugas 1.
+- Audit / output: Audited `security/` deliverables against the official KKSiber Tugas 1 rubric (Asset Inventory, DFD with trust boundaries, STRIDE threat model >= 10 threats, Risk Register top 5). Aligned `security/asset-inventory.md` A-01 path to `lib/workflows/samples.ts` and updated `security/README.md` to reflect the active PrivateSession UI crypto integration.
+- Verification: Prettier format check and git status verified. Prepared git tag `sec-0.1` instructions and Moodle submission template.
+- Human verification / edits: Pending user creation and push of git tag `sec-0.1`.
+
+## 2026-10-14 — KKSiber Slide Template Alignment & Vector DFD Implementation
+
+- Tool / Agent: Antigravity, Documentation Specialist & Knowledge Architect.
+- User prompt / purpose: Align KKSiber Tugas 1 deliverables strictly with the lecture slide templates provided by user (Asset Identification & Valuation columns with FIPS 199 C/I/A; Shostack 2014 DFD notation shapes; canonical STRIDE threat statements; and Risk Register matching Slide 22 official matrix: VH 15–25, H 8–14, M 4–7, L 1–3).
+- Outputs created / updated:
+  1. `security/asset-inventory.md`: Rewritten into the 7-column slide template (Asset, Category, Location, C, I, A, Rationale) with FIPS 199 valuation.
+  2. `security/dfd.svg` & `security/dfd.md`: Created standalone vector SVG DFD Level 0 following Shostack (2014) notation with 3 running trust boundaries (TB1–TB3) and planned desktop extension boundary (TB4).
+  3. `security/threat-model.md`: Rewritten into the 5-column slide template (ID, Element, STRIDE, Threat statement, Affected asset) using canonical syntax across 14 threats.
+  4. `security/risk-register.md`: Rewritten into the 11-column slide template, scored against the Slide 22 matrix, featuring 1:1 threat-to-risk mapping and top 5 priority risks with concrete control plans.
+  5. `docs/keterlacakan.md`: Synchronized cross-course traceability to the updated 1:1 threat/risk IDs.
+- Verification: Validated SVG XML tree with Python; validated table column counts and 1:1 T-xx/R-xx mapping via automated Python script; verified `npm run check` (44/44 unit tests, strict typecheck, ESLint, Prettier) passing 100%.
+- Human verification / edits: User provided slide images confirming the exact official risk scale.
+
+
+
