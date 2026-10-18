@@ -29,7 +29,7 @@ const report = {
   generatedAt: new Date().toISOString(),
   runtime: process.version,
   browser: browser.version(),
-  environment: "Windows local production static export, loopback HTTP",
+  environment: "Windows local Next.js production runtime, loopback HTTP",
   screenshots: [],
   audits: [],
 };

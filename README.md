@@ -29,8 +29,8 @@ Open `http://127.0.0.1:3000`. No environment variables, model downloads, or data
 | Command | Purpose |
 |---|---|
 | `npm run check` | Lint, strict type checking, unit tests, and format check |
-| `npm run build` | Export the Next.js frontend into `out/` |
-| `npm start` | Serve the built static frontend on loopback port 3000 |
+| `npm run build` | Build the Next.js application into `.next/` |
+| `npm start` | Run the built Next.js server on loopback port 3000 |
 | `npm test` | Run repeatable crypto and validation tests |
 | `npx playwright install chromium` | Install the E2E browser once |
 | `npm run test:e2e` | After building, test navigation, setup, samples, encryption/reset/error flows, dialog accessibility, and privacy boundaries at three widths |
@@ -42,7 +42,15 @@ Current automated results are recorded in [evaluation](EVALUASI.md). The existin
 
 `app/` contains routes; `components/` contains reusable UI, including `encryption-preview.tsx`; `lib/workflows/` holds typed validation and synthetic previews; `lib/sessions/` retains legacy draft validation; `lib/crypto/` holds AES-GCM and the workflow adapter. `tests/` holds Vitest/Playwright checks; `security/` holds KKS artifacts; `docs/` holds requirements, architecture, traceability, and evidence. Git belongs to this application directory. In the local workspace, it is `meeting-companion/`; course instructions and agent files live in its parent, outside the repository. A standalone clone contains everything needed to build and test the UI.
 
-The statically exported React/TypeScript/Tailwind UI can be reused by a future desktop shell. Tauri is an architectural candidate, not an installed dependency. Local inference and capture adapters remain separate from the frontend. See [architecture](docs/arsitektur.md).
+The React/TypeScript/Tailwind UI is intended for reuse by a future desktop shell. This practicum branch uses a local Next.js runtime for routing and server-rendering exercises; a static export is no longer produced by the default build. Tauri is an architectural candidate, not an installed dependency. Local inference and capture adapters remain separate from the frontend. See [architecture](docs/arsitektur.md).
+
+## Module 4 Practicum
+
+`/about/` reuses the existing product description. `/upload/samples/` and its two detail pages demonstrate fictional review examples, nested layouts, templates, validated asynchronous route parameters, and a server-only data module. They do not restore the retired session library or save meeting data. Existing live/upload/encryption workflows are unchanged.
+
+The [Module 4 technical document](docs/praktikum/modul-04.md) records checks and manual screenshot instructions. `/uji/lambat/` and `/uji/galat/` are temporary local fixtures retained until the student captures dev/production evidence; remove them and rebuild before completing the practicum. The existing KKS documents and earlier evaluation results describe the prior static-export baseline.
+
+Module 4 screenshots are taken manually by the student. Playwright screenshot, video, and trace recording are disabled; do not use `audit:ui` for this module because it writes screenshots and replaces earlier audit evidence. In PowerShell environments that block `npm.ps1`, use `npm.cmd` and `npx.cmd` for the same commands.
 
 ## Cryptographic Requirements
 

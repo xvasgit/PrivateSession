@@ -2,12 +2,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const links = [
-  { href: "/", label: "Overview" },
-  { href: "/live/", label: "Live Transcription" },
-  { href: "/upload/", label: "Upload & Review" },
-];
-export function MainNavigation() {
+export type NavigationLink = { href: string; label: string };
+
+export function MainNavigation({
+  links,
+}: {
+  links: readonly NavigationLink[];
+}) {
   const pathname = usePathname();
   return (
     <nav
@@ -15,7 +16,11 @@ export function MainNavigation() {
       className="flex flex-wrap gap-2 text-sm font-semibold"
     >
       {links.map(({ href, label }) => {
-        const active = pathname.replace(/\/$/, "") === href.replace(/\/$/, "");
+        const current = pathname.replace(/\/$/, "");
+        const target = href.replace(/\/$/, "");
+        const active =
+          current === target ||
+          (target !== "" && current.startsWith(`${target}/`));
         return (
           <Link
             key={href}
