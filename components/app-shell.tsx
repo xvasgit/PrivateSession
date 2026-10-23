@@ -1,7 +1,33 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { MainNavigation } from "./main-navigation";
+import { Suspense, type ReactNode } from "react";
+import { MainNavigation, type NavigationLink } from "./main-navigation";
 import { SignInDialog } from "./sign-in-dialog";
+
+const links: readonly NavigationLink[] = [
+  { href: "/", label: "Overview" },
+  { href: "/live/", label: "Live Transcription" },
+  { href: "/upload/", label: "Upload & Review" },
+  { href: "/about/", label: "About" },
+];
+
+function NavigationFallback() {
+  return (
+    <nav
+      aria-label="Main navigation"
+      className="flex flex-wrap gap-2 text-sm font-semibold"
+    >
+      {links.map(({ href, label }) => (
+        <Link
+          key={href}
+          href={href}
+          className="rounded-lg px-3 py-2 text-slate-600"
+        >
+          {label}
+        </Link>
+      ))}
+    </nav>
+  );
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -18,7 +44,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             Private<span className="text-teal-800">Session</span>
           </Link>
           <div className="flex flex-wrap items-center gap-4">
-            <MainNavigation />
+            <Suspense fallback={<NavigationFallback />}>
+              <MainNavigation links={links} />
+            </Suspense>
             <SignInDialog />
           </div>
         </div>

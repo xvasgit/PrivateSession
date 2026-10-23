@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
-    "start": "serve out --listen tcp://127.0.0.1:3000",
+    "start": "next start --hostname 127.0.0.1 --port 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write app components lib tests scripts *.json *.mjs *.ts .github/workflows/*.yml",

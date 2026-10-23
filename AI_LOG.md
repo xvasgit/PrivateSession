@@ -121,3 +121,40 @@
 
 
 
+
+
+## 2026-10-18 - Module 4 App Router practicum
+
+- Tool / Agent: ChatGPT (Codex), Core Software Engineer.
+- Purpose / brief prompt: Implement the approved Module 4 plan from PDF sections E/H while preserving PrivateSession product descriptions and goals; all screenshots are taken manually by the student; no Git writes.
+- Output: About and synthetic review list/detail routes under Upload & Review; server-only fixtures; awaited and validated params; nested layout/template with temporary notes; accessible fallback files; temporary /uji fixtures; runtime configuration, navigation, E2E checks, technical document and text evidence. Updated only technical runtime guidance in README/architecture.
+- Verification: Installed Next.js 16.4.0 guides; check passed (44 unit tests, lint, types, format); build passed after a genuine server-only negative compilation; 63 E2E passed at 390/768/1280 px; curl and dev/production DOM checks recorded in docs/praktikum/evidence/modul-04/. Screenshots/video/traces disabled.
+- Corrections / rationale: Initial browser run had three selector failures from the extra Next.js alert announcer; scoped the selector to main and reran successfully. Sandbox teardown required stopping only identified test servers and running E2E outside the sandbox. A stalled stdin-based DOM probe was replaced with a temporary file-based check, then removed. No production behavior was changed to hide test failures.
+- Boundaries / human verification: No assistance with the individual test in PDF section G; no capture, inference, media uploads, accounts, persistence, or changes to crypto APIs. Screenshot placeholders, Lighthouse/React DevTools verification, and Name/NIM remain for the student. The temporary negative import was restored after saving compiler output; instructions permit manual reproduction. /uji remains until manual captures are complete, followed by final cleanup/build. No staging, commits, pushes, merges, tags, or branch changes.
+
+
+## 2026-10-18 - Module 4 manual evidence review
+
+- Agent / tool: ChatGPT (Codex), Core Software Engineer.
+- User request: Inspect screenshots, update the technical document, and assess React DevTools evidence and optional raw TXT retention.
+- Reviewed and linked all 11 student images. Loading/error and server-only evidence are present; Link navigation, return-to-list, and client hooks need additional manual captures. Preserved student identity edits.
+- Embedded essential historical check/build outputs and results so raw TXT evidence is optional. Checked PDF E.4/H and Markdown links/format. No screenshots created, files deleted, code changed, tests rerun, or Git writes performed. Student review and fixture cleanup/final testing remain pending.
+
+
+### 2026-10-18 - Module 4 evidence scope correction
+
+- Agent: Codex (Core Software Engineer). User requested removing optional A1 evidence. Rechecked the Module 4 PDF: viewport screenshots and Lighthouse are broader PAW milestone requirements, not Module 4 E/H deliverables. Removed A1 instructions, its verification row and pending checklist reference from modul-04.md. Preserved required Module 4 evidence and actual multi-viewport test results. No code or Git writes.
+
+
+### 2026-10-18 - Updated Module 4 screenshot acceptance
+
+- Agent: Codex - Core Software Engineer.
+- Reviewed updated nav-link/layout-return and three new React DevTools images. Confirmed document-free Link navigation, retained layout note on return, and hooks for MainNavigation, ReviewNote and UploadReview. Linked all 14 manual images with evidence-specific captions.
+- Removed reappearing A1/Lighthouse requirements and repaired truncated finalization checklist and duplicate table fragments in the current document. Preserved pending fixture cleanup, final tests and student Git publication. Validated formatting and image links; no application edits, screenshot capture, or Git writes.
+
+
+### 2026-10-18 - Module 4 document after fixture removal
+
+- Agent: Codex - Core Software Engineer.
+- Updated modul-04.md at user request after confirming app/uji and its lab test were removed. Updated route table/tree and component classification; retained historical screenshots and the permanent server-only module/E2E test. Removed stale section references without restoring A1 or the deleted finalization checklist.
+- Verification: reran production build successfully with no /uji routes; check passed lint, TypeScript, 44 unit tests and formatting. Embedded concise actual outputs required by section H. Clearly marked historical 63 E2E and HTTP results; no claim of a new browser or HTTP run. Checked 14 image links and document formatting. No source edits or Git writes.

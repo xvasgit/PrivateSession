@@ -2,17 +2,25 @@
 
 ## Current Implementation
 
-One repository, one statically exported Next.js frontend, no API backend. Overview (`/`), Live Transcription (`/live/`), and Upload & Review (`/upload/`) share a responsive shell with active navigation and an informational Sign In dialog. Server-rendered page shells contain narrowly scoped client components for forms, file selection, and sample controls.
+One repository, one Next.js application served on local loopback, no application API backend. Overview (`/`), Live Transcription (`/live/`), and Upload & Review (`/upload/`) share a responsive shell with active navigation and an informational Sign In dialog. Server-rendered page shells contain narrowly scoped client components for forms, file selection, and sample controls.
 
 `lib/workflows/` separates typed capture preferences, validation, metadata-only media checks, and fixed synthetic transcript/analysis fixtures from rendering. Setup validates consent and source restrictions without device APIs. File selection inspects only name/size and retains metadata; no content is read. Explicit sample actions are independent of inputs. Transcript playback uses a timer cleaned up on pause/stop/reset/unmount; all state is in memory and resets on reload.
 
-There is no persistence, capture, upload, inference, auth, or MCP integration. The prior library/setup routes remain retired; legacy draft validation remains regression-tested. A loopback server supplies frontend assets only.
+There is no persistence, capture, upload, inference, auth, or MCP integration. The prior library/setup routes remain retired; legacy draft validation remains regression-tested. The loopback Next.js server supplies assets, HTML, and React Server Component responses for navigation. User form fields, selected file metadata, notes, and cryptographic operations remain in browser memory.
 
 The shared `EncryptionPreview` client component invokes `lib/crypto/workflow-encryption.ts` after live setup validation or an explicit synthetic review request. The adapter snapshots only the relevant JSON, generates a temporary non-exportable key and kind-prefixed artifact ID, calls the unchanged AES-GCM helper, and authenticates/decrypts before requiring exact recovery. Only the encrypted envelope and artifact ID reach UI state; the key and recovered plaintext are not returned. The sample-review branch accepts no file metadata or contents.
 
 Each preparation mounts a new verification instance. Editing a draft or resetting a sample unmounts it; pending results are ignored after unmount. Duplicate actions are disabled while busy, and failures return no success envelope. Verification is a demonstration: plaintext previews stay visible, key references expire after the operation without guaranteed memory erasure, and nothing is saved or recoverable later.
 
-`npm run build` generates `out/`. The [Next.js static export guide](https://nextjs.org/docs/app/guides/static-exports) and [Tauri Next.js integration guide](https://v2.tauri.app/start/frontend/nextjs/) support this frontend shape. Tauri/native code has not been scaffolded; system audio and screen capture require platform-specific design, permissions, and tests.
+`npm run build` generates `.next/`; `npm start` runs Next.js on `127.0.0.1:3000`. Module 4 removes `output: "export"` to test request-time loading and server errors. Cache Components remain disabled. A future desktop build will need a separate compatibility decision for static assets or a local runtime; the prior static-export integration is not claimed to work unchanged. Tauri/native code has not been scaffolded; system audio and screen capture require platform-specific design, permissions, and tests.
+
+## Module 4 Routing Extension
+
+`/about/` repeats the established product description. `/upload/samples/` reads fixed fictional reviews from `lib/workflows/review-samples.server.ts`; its `server-only` marker rejects imports from client modules. The existing browser fixtures remain separate. Detail routes await `params`, validate positive safe integer IDs without leading zeroes, then look up the example or call `notFound()`. IDs 1 and 2 are prerendered by `generateStaticParams`; unknown IDs are validated by the runtime.
+
+The sample layout preserves a temporary review workspace note across list/detail navigation. Its template remounts the current review note when the child segment changes. Neither note leaves browser memory or survives reload. Product loading/error fallbacks stay in the sample segment; temporary `/uji/` fixtures exercise a two-second response and an intentional server exception until manual evidence is captured. See [Module 4](praktikum/modul-04.md) for the pending cleanup and verification stages.
+
+The KKS asset inventory, DFD, threats, risks, and historical evidence remain the submitted static-export baseline. Runtime rendering introduces server execution in the local lab and is a documented delta, not a revalidated security assessment. No meeting data is sent to the server, and no database or external service is introduced.
 
 ## Intended Desktop Pipeline (Planned)
 
