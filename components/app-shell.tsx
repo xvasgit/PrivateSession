@@ -59,7 +59,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="mx-auto max-w-6xl px-5 pb-8 text-sm text-slate-600 sm:px-8">
-        PemWeb UI preview · No recording, uploads, AI processing, or saved work
+        PemWeb UI preview · No recording, media uploads, or AI processing.
+        Practicum only: temporary metadata records and a demo session cookie.
       </footer>
     </div>
   );

@@ -6,12 +6,12 @@ PrivateSession is a privacy-first meeting assistant for students and professiona
 
 - **Overview (`/`):** feature descriptions and brief workflows; Live Transcription and Upload & Review are **In progress**, Contextual Workspaces is **Upcoming**.
 - **Live Transcription (`/live/`):** validated title/context/consent form, selectable capture modes/sources, and an independent sample transcript with demo controls.
-- **Upload & Review (`/upload/`):** metadata-only selection of one MP3/WAV/MP4/M4V/MOV file, error/removal states, and independent sample summaries, insights, follow-ups, and potential missed details.
+- **Upload & Review (`/upload/`):** local selection of one MP3/WAV/MP4/M4V/MOV file, explicit server-side metadata validation, error/removal states, and independent sample summaries, insights, follow-ups, and potential missed details.
 - **Local encryption demos:** encrypt and verify a prepared live draft or the explicitly requested synthetic review using temporary keys; neither action saves or locks the visible text.
-- Shared navigation with active indicators and an accessible informational **Sign In** dialog; accounts and saving remain upcoming.
+- Shared navigation with active indicators and an accessible informational **Sign In** dialog linking to the separate practicum demo; production accounts and durable saving remain upcoming.
 - Reusable shell/navigation, cards, status badges, buttons, headings, fields, source selector, dialog, and sample-output components.
 
-**This is an interactive UI demonstration, not a functioning recording or AI service.** No capture permissions, file-content reads, uploads, inference, authentication, MCP connections, or persistent storage occur. Samples appear only through explicit actions and are never attributed to the selected file or capture preferences. State resets on reload. Use synthetic details when demonstrating the forms. The fictional session library and its routes have been removed.
+**This is an interactive UI demonstration, not a functioning recording or AI service.** No capture permissions, file-content reads, media uploads, inference, MCP connections, or durable storage occur. **Validate selection** sends only filename and byte count; selection alone sends neither. The separate practicum sends synthetic credentials and request fields to the same-origin server, sets an HttpOnly session cookie, and keeps temporary records in server memory. Live/upload previews reset on reload; demo records survive reload/logout but disappear on server restart. Samples remain independent of inputs. Use only synthetic data. The fictional session library remains removed.
 
 Planned workflow: choose consented sources → live transcript with timestamped screen context; or select a past recording → structured analysis and follow-ups. Upcoming workspaces will accept prompts, documents, images, and MCP connectors to ground a field-specific assistant. No workspace page is implemented yet.
 
@@ -24,7 +24,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:3000`. No environment variables, model downloads, or database are required for this UI revision.
+Open `http://127.0.0.1:3000`. Public UI workflows require no environment variables, model downloads, or database. For demo sign-in, configure the two synthetic lab variables described below.
 
 | Command | Purpose |
 |---|---|
@@ -51,6 +51,44 @@ The React/TypeScript/Tailwind UI is intended for reuse by a future desktop shell
 The [Module 4 technical document](docs/praktikum/modul-04.md) records checks and manual screenshot instructions. `/uji/lambat/` and `/uji/galat/` are temporary local fixtures retained until the student captures dev/production evidence; remove them and rebuild before completing the practicum. The existing KKS documents and earlier evaluation results describe the prior static-export baseline.
 
 Module 4 screenshots are taken manually by the student. Playwright screenshot, video, and trace recording are disabled; do not use `audit:ui` for this module because it writes screenshots and replaces earlier audit evidence. In PowerShell environments that block `npm.ps1`, use `npm.cmd` and `npx.cmd` for the same commands.
+
+## Module 5: Upload Metadata Validation (Partial)
+
+Choose a recording to inspect its metadata, then select **Validate selection**. Zod 4 shares one schema between the picker and `app/upload/actions.ts`. The Server Action independently uses `safeParse`, returns typed field errors or validated metadata, and derives Audio/Video from the extension. Filenames require a supported final extension; sizes must be positive safe-integer byte counts. Missing, blank, fractional, malformed, negative, and zero sizes are rejected without an arbitrary recording-size limit.
+
+`useActionState` provides pending and retry states. Replacing/removing a selection discards old responses; sample reviews and encryption remain independent. Explicit `FormData` contains only filename and size, never a `File`. The action does not log filenames or save data. Metadata validation cannot establish authenticity, actual file contents, or codec compatibility; client-provided metadata can be forged. Filenames can themselves reveal private information, so use synthetic names for demonstrations.
+
+The public picker remains a stateless validation-only workflow. The separately removable practicum below implements demo sessions and record creation. Both require the Next.js runtime, not static hosting. See the latest [evaluation](EVALUASI.md) for executed checks and known dependency risks.
+
+### Separate review-request practicum
+
+Open **Upload & Review → Open the review-request practicum**, or `/demo-sign-in/`. Configure `DEMO_EMAIL` and `DEMO_PASSWORD` in ignored `.env.local` using a synthetic email and a lab-only password of at least eight characters. Blank variable names are supplied in `.env.example`; missing/invalid configuration fails closed. Never use personal credentials. Restart the local server after configuration changes.
+
+The shared lab account creates temporary records at `/upload/practicum/new/` and lists them at `/upload/practicum/`. These are actual demo records, not fictional saved meetings. All users of the one configured account share its records; this is not production identity isolation. Each record contains a trimmed title (3–80), meeting type (Online Meeting/Lecture/Interview/Other), context (10–500), synthetic-data confirmation, server-derived owner, ID, and timestamp. No file is needed and no processing is scheduled.
+
+The server checks session, Zod schema, and case-insensitive title uniqueness for the account before synchronously inserting. It then revalidates the list and redirects outside the mutation catch. The title rule is an educational semantic constraint, not a proposed restriction on real meetings. Controlled inputs and prevented automatic form reset retain entries after rejection/network failure.
+
+`lib/practicum/` contains the schema and server-only in-memory stores; `components/practicum/` and the demo routes are separate from public workflows. Session identifiers use CSPRNG UUIDs, rotate on sign-in, expire after eight hours, and are revoked on logout. Cookie `private-session-demo` uses HttpOnly, SameSite=Lax, Path=/, Max-Age=28800, and Secure in production. The proxy checks presence only; every protected page/action verifies the session, and record access is scoped to its server-derived owner. Logout removes access, not records; server restart clears both stores. Do not deploy this single-process lab authentication as a production service.
+
+Use `http://localhost` for browser cookie checks in the local lab; production cookies stay Secure. A production lab server can be started with `npx next start --hostname localhost --port 3101`. Use HTTPS for non-local access. Do not disable Secure to work around host differences.
+
+### Manual evidence capture (pending)
+
+No Module 5 technical document or screenshots are generated by this increment. Capture only synthetic examples, mask cookie values before saving/sharing images, and do not export HAR files.
+
+1. Sign in and create a synthetic request. Capture the detail status and updated list; show no generated analysis.
+2. On the new-request page, set `document.querySelector('form:has(#demo-title)').noValidate = true` in DevTools. Submit three separate invalid cases: a two-character title; an unsupported option added to the meeting-type select through Elements; and an unchecked confirmation. Capture each server field error and record expected/actual results. Restore a valid form between cases.
+3. Submit a duplicate title to show semantic rejection and retained values.
+4. Inspect **Application → Cookies** and the sign-in POST's **Network → Response Headers → Set-Cookie**. Show HttpOnly, SameSite, Path and expiry; verify Secure in production and its absence in development. Mask the entire cookie value. `document.cookie` must not reveal the demo cookie.
+5. With a valid form already open, change the cookie value to `forged`, then submit. Capture the session-rejection message. Reloading a protected route must lead to demo sign-in.
+6. Sign in again; keep the cookie value only temporarily in local memory for this manual test. Log out and verify cookie deletion. Reinsert the old value through Application, then visit the protected list: sign-in is required. Do not paste the value into logs, documents, or screenshots.
+7. Record any discrepancies rather than claiming success. Expiry and ownership isolation have automated coverage; server restart should also clear the temporary records/session in a manual demonstration.
+
+Playwright supplies fresh synthetic test credentials to its managed server without writing an environment file. Use `$env:PLAYWRIGHT_PORT='3101'; npm run test:e2e` if port 3000 is busy. For development cookie verification, use another port and `$env:PLAYWRIGHT_DEV='1'; npm run test:e2e -- tests/e2e/practicum.spec.ts --grep "cookie flags" --project desktop`; remove the environment overrides afterward. Screenshots, video, and traces remain disabled.
+
+### Later removal
+
+After preserving the assessed revision, a separately authorized cleanup may remove the demo routes, practicum modules/components, proxy, demo environment keys, entry links, and demo tests together. Keep public media validation and its privacy tests. Never remove session checks while leaving private demo records exposed. Keep the submitted revision and evidence reproducible; no cleanup, commits, or tags are performed automatically.
 
 ## Cryptographic Requirements
 

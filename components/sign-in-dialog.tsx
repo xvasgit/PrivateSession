@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { Button } from "./ui/button";
 
 export function SignInDialog() {
@@ -27,12 +28,21 @@ export function SignInDialog() {
           Accounts are upcoming
         </h2>
         <p id="sign-in-description" className="my-4 leading-7 text-slate-600">
-          Sign in and saved work are not available yet. This preview does not
-          create an account or save your setup, files, or sample results.
+          Production accounts and saved work are not available yet. A separate
+          practicum uses a synthetic lab account, a session cookie, and
+          temporary server-side request metadata. It never saves files or sample
+          results.
         </p>
         <Button type="button" onClick={() => dialog.current?.close()}>
           Close
         </Button>
+        <Link
+          href="/demo-sign-in/"
+          onClick={() => dialog.current?.close()}
+          className="ml-4 inline-block font-semibold text-teal-800 underline"
+        >
+          Open demo sign-in
+        </Link>
       </dialog>
     </>
   );

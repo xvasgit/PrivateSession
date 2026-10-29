@@ -8,7 +8,7 @@ export default function OverviewPage() {
       <PageHeading
         eyebrow="PrivateSession"
         title="Be present. Keep the context."
-        description="A privacy-first assistant for conversations, past recordings, and the context behind your work. Explore the workflows we're building, with local-only interface demos today."
+        description="A privacy-first assistant for conversations, past recordings, and the context behind your work. Explore interface demos and optional recording metadata validation; your media stays on-device."
       />
       <div className="grid gap-5 lg:grid-cols-3">
         <FeatureCard

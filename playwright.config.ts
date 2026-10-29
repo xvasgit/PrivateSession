@@ -1,4 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
+import { randomUUID } from "node:crypto";
+
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000);
+if (!Number.isInteger(port) || port < 1024 || port > 65535)
+  throw new Error("Invalid Playwright port");
+const dev = process.env.PLAYWRIGHT_DEV === "1";
+const baseURL = `http://localhost:${port}`;
+// Ephemeral synthetic test credentials, never real user configuration.
+process.env.PRACTICUM_TEST_EMAIL ??= "browser-lab@example.invalid";
+process.env.PRACTICUM_TEST_PASSWORD ??= randomUUID();
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -7,7 +17,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: "list",
   use: {
-    baseURL: "http://127.0.0.1:3000",
+    baseURL,
     trace: "off",
     screenshot: "off",
     video: "off",
@@ -36,8 +46,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm start",
-    url: "http://127.0.0.1:3000",
+    command: `node node_modules/next/dist/bin/next ${dev ? "dev" : "start"} --hostname localhost --port ${port}`,
+    url: baseURL,
+    env: {
+      DEMO_EMAIL: process.env.PRACTICUM_TEST_EMAIL,
+      DEMO_PASSWORD: process.env.PRACTICUM_TEST_PASSWORD,
+    },
     reuseExistingServer: false,
     timeout: 120000,
   },

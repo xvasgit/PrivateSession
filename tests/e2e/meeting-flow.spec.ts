@@ -218,7 +218,10 @@ test("Sign In dialog supports keyboard dismissal and focus return", async ({
   const close = dialog.getByRole("button", { name: "Close" });
   await expect(close).toBeFocused();
   await page.keyboard.press("Tab");
-  await page.keyboard.press("Tab");
+  await expect(
+    dialog.getByRole("link", { name: "Open demo sign-in" }),
+  ).toBeFocused();
+  await page.keyboard.press("Shift+Tab");
   await expect(close).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
@@ -228,11 +231,28 @@ test("Sign In dialog supports keyboard dismissal and focus return", async ({
   await expect(trigger).toBeFocused();
 });
 
-test("flows never capture, read media, send content, or persist state", async ({
+test("flows send only explicitly validated metadata and never capture, read media, or persist state", async ({
   page,
 }) => {
   const outbound: string[] = [];
+  const metadataPosts: string[] = [];
+  let allowMetadata = false;
   page.on("request", (request) => {
+    const url = new URL(request.url());
+    const body = request.postData() ?? "";
+    if (
+      allowMetadata &&
+      request.method() === "POST" &&
+      url.origin === new URL(page.url()).origin &&
+      url.pathname === "/upload/" &&
+      request.headers()["next-action"] &&
+      body.includes("synthetic.mp4") &&
+      !body.includes("filename=") &&
+      !body.includes("PRIVATE_MEDIA_SENTINEL")
+    ) {
+      metadataPosts.push(body);
+      return;
+    }
     if (
       // Static navigation may probe route availability with a bodyless HEAD.
       !["GET", "HEAD"].includes(request.method()) ||
@@ -303,7 +323,7 @@ test("flows never capture, read media, send content, or persist state", async ({
     .setInputFiles({
       name: "synthetic.mp4",
       mimeType: "video/mp4",
-      buffer: Buffer.from("synthetic"),
+      buffer: Buffer.from("PRIVATE_MEDIA_SENTINEL"),
     });
   await page.getByRole("button", { name: "Try sample analysis" }).click();
   await page.getByRole("button", { name: "Sign In", exact: true }).click();
@@ -316,6 +336,16 @@ test("flows never capture, read media, send content, or persist state", async ({
       .getByRole("region", { name: "Sample review encryption demo" })
       .getByRole("status"),
   ).toContainText("Demo verified");
+  expect(await calls()).toEqual([]);
+  expect(metadataPosts).toEqual([]);
+  allowMetadata = true;
+  await page
+    .getByRole("button", { name: "Validate selection", exact: true })
+    .click();
+  await expect(page.getByText(/^Selection validated/)).toBeVisible();
+  allowMetadata = false;
+  expect(metadataPosts).toHaveLength(1);
+  expect(metadataPosts[0]).toMatch(/name="[^"]*size"/);
   expect(await calls()).toEqual([]);
   expect(outbound).toEqual([]);
 });

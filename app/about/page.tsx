@@ -18,8 +18,11 @@ export default function AboutPage() {
           Local processing, explicit consent, and control over what is captured
           and retained guide the product. These capabilities are still being
           built: this web preview requests no device access and sends no meeting
-          content anywhere. Sample outputs are synthetic, not results from your
-          device or files.
+          contents anywhere. Explicit upload validation sends only the filename
+          and size to this app’s server. The separate practicum sends synthetic
+          credentials and request fields, uses a demo session cookie, and stores
+          metadata temporarily in server memory. Sample outputs are synthetic,
+          not results from your device or files.
         </p>
       </Card>
     </>
