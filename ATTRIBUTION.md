@@ -5,3 +5,5 @@ The initial code/text and PemWeb revision were generated with Codex and are reco
 Direct packages: Next.js (MIT), React/React DOM (MIT), Tailwind CSS/PostCSS (MIT), TypeScript (Apache-2.0), ESLint (MIT), Prettier (MIT), Vitest (MIT), Playwright (Apache-2.0), and serve (MIT). Consult installed package license files and `package-lock.json` for exact dependency versions/transitive licenses before redistribution.
 
 Project license selection remains with the user; this repository does not grant an open-source license yet. Future local model weights and native dependencies need separate redistribution/attribution review.
+
+Module 6 database tooling (2026-11-02): Prisma CLI, Prisma Client, and `@prisma/adapter-pg` 7.10.1 use Apache-2.0; `pg` 8.23.1 and `tsx` 4.23.15 use MIT; `dotenv` 18.0.9 uses BSD-2-Clause, as verified from installed package metadata. The two-entity design is supplied by the student. Database fixtures and adapter code were generated with Codex and use synthetic content only. No PostgreSQL binaries, secrets, database exports, or external meeting materials are bundled in the repository.

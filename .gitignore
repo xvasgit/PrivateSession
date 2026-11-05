@@ -1,5 +1,6 @@
 # Dependencies and generated application output
 node_modules/
+generated/prisma/
 .next/
 out/
 dist/
@@ -28,3 +29,4 @@ Thumbs.db
 # Others
 /docs/tugas-1-checklist.md
 /docs/evidence/verification.md
+/docs/evidence/module-06-capture-guide.md

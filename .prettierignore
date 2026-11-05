@@ -1,4 +1,5 @@
 node_modules/
+generated/prisma/
 .next/
 package-lock.json
 next-env.d.ts

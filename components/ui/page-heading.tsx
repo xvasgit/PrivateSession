@@ -8,7 +8,7 @@ export function PageHeading({
   description: string;
 }) {
   return (
-    <header className="mb-8 max-w-2xl">
+    <header className="mb-8 max-w-2xl break-words">
       <p className="mb-3 text-xs font-bold uppercase tracking-widest text-teal-800">
         {eyebrow}
       </p>
