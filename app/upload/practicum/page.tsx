@@ -10,6 +10,15 @@ export default async function DemoRequestList() {
   return (
     <>
       <DemoSessionBanner owner={session.owner} />
+      <p className="mb-6">
+        <Link
+          href="/meetings/"
+          className="font-semibold text-teal-800 underline"
+        >
+          Open the Module 6 meeting lab
+        </Link>{" "}
+        — separate persistent synthetic records.
+      </p>
       <PageHeading
         eyebrow="Temporary records"
         title="Demo review requests"

@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model MeetingSession {
+  id          Int                 @id @default(autoincrement())
+  sessionCode String              @unique
+  title       String
+  createdAt   DateTime            @default(now()) @db.Timestamp(3)
+  segments    TranscriptSegment[]
+}
+
+model TranscriptSegment {
+  id                Int            @id @default(autoincrement())
+  sessionId         Int
+  sequence          Int
+  contentCiphertext Bytes
+  iv                Bytes
+  createdAt         DateTime       @default(now()) @db.Timestamp(3)
+  session           MeetingSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, sequence])
+}

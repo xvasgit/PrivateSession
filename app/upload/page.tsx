@@ -11,6 +11,17 @@ export default function UploadPage() {
       />
       <UploadReview />
       <p className="mt-8 text-sm leading-6">
+        Module 6 lab:{" "}
+        <Link
+          href="/meetings/"
+          className="font-semibold text-teal-800 underline"
+        >
+          Open the meeting database lab
+        </Link>
+        . Separate synthetic text records persist in the local database and
+        require demo sign-in.
+      </p>
+      <p className="mt-8 text-sm leading-6">
         Module 5 lab:{" "}
         <Link
           href="/upload/practicum/"

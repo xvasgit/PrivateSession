@@ -6,4 +6,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/demo-sign-in/", request.url));
   return NextResponse.next();
 }
-export const config = { matcher: ["/upload/practicum/:path*"] };
+export const config = {
+  matcher: ["/upload/practicum/:path*", "/meetings/:path*"],
+};

@@ -6,7 +6,7 @@ One repository, one Next.js application served on local loopback, with a statele
 
 `lib/workflows/` separates typed capture preferences, validation, metadata-only media checks, and fixed synthetic transcript/analysis fixtures from rendering. Setup validates consent and source restrictions without device APIs. File selection inspects only name/size and retains metadata; no content is read. Explicit sample actions are independent of inputs. Transcript playback uses a timer cleaned up on pause/stop/reset/unmount; all state is in memory and resets on reload.
 
-There is no durable persistence, capture, media upload, inference, production authentication, or MCP integration. The prior library/setup routes remain retired; legacy draft validation remains regression-tested. The loopback Next.js server supplies assets, HTML, and React Server Component responses for navigation. Live fields, notes, and cryptographic operations remain in browser memory. Upload metadata leaves the browser only when the user explicitly chooses Validate selection. The separate practicum additionally sends synthetic credentials and request fields and uses a demo session cookie.
+There is no capture, media upload, inference, production authentication, or MCP integration. The prior library/setup routes remain retired; legacy draft validation remains regression-tested. The loopback Next.js server supplies assets, HTML, and React Server Component responses for navigation. Public live fields, notes, and encryption previews remain in browser memory. Upload metadata leaves the browser only when the user explicitly chooses Validate selection. The separate Module 5 practicum sends synthetic credentials/request fields and uses a demo session cookie. Module 6 adds persistent local database records as described below.
 
 The picker and `app/upload/actions.ts` share a Zod 4 schema in `lib/workflows/media.ts`. Explicit FormData submits only filename and decimal byte count; the server parses sizes without blank-value coercion and independently validates both fields. The typed response contains errors or metadata with a derived media category. `useActionState` handles pending/failure/retry, while selection revisions suppress stale results after replacement/removal. No file contents are read, persisted, or logged by the action. Metadata validation is not authenticity, content, or codec validation. This public workflow remains independent of the practicum.
 
@@ -45,7 +45,7 @@ Keep desktop permissions and filesystem access behind narrowly defined native co
 - Vault adapter: seals/opens envelopes under stable session IDs; owns durable key lifecycle, encrypted indexes, retention, export, and deletion.
 - UI: shows capture/processing state and errors; invokes typed adapters rather than direct unrestricted OS access.
 
-Persistent keys, durable storage, production authentication, secure IPC, signed exports, and full native lifecycle remain unimplemented. The session draft key is intentionally temporary and cannot secure a reusable vault.
+Production key lifecycle, a native durable vault, production authentication, secure IPC and signed exports remain unimplemented. The browser draft key is intentionally temporary. The separate Module 6 lab uses a persistent environment key and PostgreSQL storage; it is not the native vault.
 
 ## Upcoming Workflows
 
@@ -54,3 +54,11 @@ Past media will eventually pass through a validated processing adapter to transc
 ## Ownership
 
 Codex maintains core code, contracts, test/build tooling, and engineering architecture. Antigravity maintains course documentation architecture and academic traceability. Security/crypto/QA agents retain their assigned roles and coordinate overlapping files. Shared onboarding does not change an agent's identity.
+
+## Module 6 Persistent Meeting Lab (2026-11-02)
+
+The separate /meetings routes share the synthetic demo account with Module 5 but store records in PostgreSQL. Every page and mutation verifies the session; the proxy checks only cookie presence. There are no owner columns or multi-user isolation claims. Keep shared sign-in/session/proxy controls if later removing Module 5 request features.
+
+Server pages use the lazy server-only Prisma client. Zod schemas in lib/meetings/schema.ts define metadata, content, IDs and explicit deletion confirmation. Actions enforce session → schema → database/relationship checks → encryption/mutation → path revalidation → redirect. The shared repository implements CRUD and transactional parent/child deletion; raw errors and submitted fields are not logged. P2002, P2003 and P2025 produce safe messages. Loading, empty, invalid/missing record, unavailable database and failed authentication of encrypted data have distinct UI states.
+
+The persistent server-only key adapter encrypts manually entered synthetic text before writes and decrypts only for authenticated detail rendering. Existing child identity (sessionId, sequence) is immutable, while metadata edits preserve numeric identity. Ciphertext/tag and IV remain BYTEA; titles, codes, order and timestamps are plaintext. Ordinary deletion preserves RESTRICT, while separately confirmed bulk deletion uses an interactive transaction. Test-only failure injection proves rollback without exposing a public failure switch. No media handling or processing is added.

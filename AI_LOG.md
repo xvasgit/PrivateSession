@@ -202,3 +202,33 @@
 
 - Agent: Codex - Core Software Engineer. User chose to keep the current masked M14 image. Embedded it and removed its pending capture instructions; documented that the truncated cookie name and static screenshot cannot independently verify the full session/replay sequence. All 14 images are now linked.
 - Updated current document status and checked local links; preserved prior log entries. No image/code edits, tests, or Git mutations.
+
+
+### 2026-11-02 - Module 6 Prisma and encrypted transcript foundation
+
+- Agent / tool: OpenAI Codex - Core Software Engineer.
+- User prompt: Guide the first database increment after PostgreSQL/pgAdmin setup and confirmed environment readiness, using the student's MeetingSession/TranscriptSegment design and agreed persistent lab key lifecycle. Student corrected an extra quote in the local key setting after secret-free validation failed.
+- Output used: Prisma config/schema/migration, lazy server-only client, local database boundary, binary transcript adapter and key loader, transactional upsert seed, fresh-process verifier, package scripts/client generation and generated-file exclusions. Updated README, crypto decisions, attribution and actual evaluation. Existing browser demonstrations and Module 5 code preserved.
+- Verification: PostgreSQL 18.4 targets verified empty before reviewed migration; seed twice succeeded, direct count 2 sessions/3 segments, fresh-process decryption passed. Check passed 118 unit tests plus lint/types/format. Config/schema/client/migration status, exclusions and manifest/lock consistency checked. Default Turbopack builds failed at CSS-worker startup; Webpack production build passed. Auxiliary snapshot/offline lock refresh failures are recorded in EVALUASI.
+- Human verification / next: Student retains the original lab key privately and can inspect tables in pgAdmin. CRUD, ownership policy, errors/rollback evidence, ten database scenarios, manual captures and Module 6 technical document remain future work. No passwords/keys displayed or replaced, no Git mutations, no framework upgrade, new UI or automatic screenshots.
+
+
+### 2026-11-02 - Module 6 meeting CRUD and transaction lab
+
+- Agent / tool: OpenAI Codex - Core Software Engineer.
+- User prompt: "Yes, implement plan." Approved scope: separate protected meeting lab using the existing two-table Prisma/PostgreSQL design and single synthetic account; CRUD, encrypted transcripts, real constraint/transaction testing, supporting documentation, manual screenshots later and technical document afterward.
+- Output used: app/meetings routes/action, components/meetings forms/banner, lib/meetings schemas/repository/error mapping, extended proxy, secondary entry links and privacy wording, long-title wrapping, unit/action/browser tests, opt-in database scenario script and repeat-seed snapshot verifier. Updated README, architecture, requirements, traceability, ADR-006, evaluation and manual capture guide. Preserved existing framework version, migration, key, seed data, Module 5 and media/encryption demos.
+- Verification: installed framework guides reviewed; check passed lint/types/format and 146/146 unit tests. Database scenarios 13/13; migration up to date; two repeat seeds preserved exact rows and fresh-process decryption passed. Full production browser suite 111/111 across three widths; final targeted meeting tests 15/15 after long-title/privacy refinements. Webpack build passed; default Turbopack worker failure, sandbox EPERM and existing vulnerability notice are documented. Initial test harness/locator failures were corrected.
+- Human verification / next: Student reviews synthetic meeting workflows, retains the original key, captures evidence manually from the guide and prepares the Module 6 document afterward. No screenshots or docs/praktikum/modul-06.md created; no Git mutations or framework upgrade. The shared lab account offers no per-user record isolation. All earlier log entries preserved.
+
+### 2026-11-03 - Module 6 technical document and manual evidence
+
+- Agent / tool: OpenAI Codex - Core Software Engineer.
+- User prompt: Implement the approved eight-section Module 6 technical document plan in Indonesian, embedding the 18 supplied screenshots and retaining the final confirmation image with an accurate limitation.
+- Output used: docs/praktikum/modul-06.md with product ER diagram, exact schema, migration excerpts, seed/client rationale, CRUD/error mapping, transactions/rollback, 13 actual database scenarios, limitations and AI disclosure. Added the document link to README. Student identity reused from Module 5; working branch verified as praktikum/modul-06.
+- Verification: Matched current schema/migration/seed/action/repository/crypto/test sources and official PDF section H. Checked eight required headings, 18 distinct image embeds, 37 resolving relative links, exact schema excerpt and 13 scenario rows. Document formatting and git diff whitespace checks passed. Existing November 2 test results are explicitly historical; no database mutations, seed reruns, application test/build reruns or Git writes.
+- Human evidence / limitations: Screenshots were captured by the student, not generated or edited by Codex. Revised image 15 shows the stale form; image 17 contains rollback plus all 13 PASS labels. Image 18 is retained as pre-deletion confirmation only, with completed transaction supported by PASS 13. No claim that accidental seed deletion was subsequently repaired without new evidence. Student review, commit/push and submission remain pending. Previous records preserved.
+
+### 2026-11-03 - README submission link cleanup
+
+- OpenAI Codex, Core Software Engineer: at the student's request, removed the ignored Module 6 capture-guide link from README while retaining the technical-document and evaluation links. Verified the obsolete reference is absent and the README diff has no whitespace errors. No application changes, tests or Git mutations.

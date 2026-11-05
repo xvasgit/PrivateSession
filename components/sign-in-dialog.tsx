@@ -30,8 +30,9 @@ export function SignInDialog() {
         <p id="sign-in-description" className="my-4 leading-7 text-slate-600">
           Production accounts and saved work are not available yet. A separate
           practicum uses a synthetic lab account, a session cookie, and
-          temporary server-side request metadata. It never saves files or sample
-          results.
+          temporary server-side request metadata. The separate Module 6 lab
+          stores synthetic meetings and encrypted transcript text in a local
+          database. Neither lab saves media files or sample-analysis results.
         </p>
         <Button type="button" onClick={() => dialog.current?.close()}>
           Close
