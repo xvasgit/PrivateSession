@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Suspense, type ReactNode } from "react";
 import { MainNavigation, type NavigationLink } from "./main-navigation";
-import { SignInDialog } from "./sign-in-dialog";
+import { readIdentity } from "@/lib/auth/session.server";
+import { SignOutButton } from "./auth/credential-form";
 
 const links: readonly NavigationLink[] = [
   { href: "/", label: "Overview" },
-  { href: "/live/", label: "Live Transcription" },
+  { href: "/meetings/", label: "Meetings" },
   { href: "/upload/", label: "Upload & Review" },
-  { href: "/about/", label: "About" },
 ];
 
 function NavigationFallback() {
@@ -29,6 +29,28 @@ function NavigationFallback() {
   );
 }
 
+async function SessionNavigation() {
+  const session = await readIdentity();
+  const style =
+    "rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50";
+  return session ? (
+    <div className="flex flex-wrap items-center gap-3">
+      <Link href="/account/" className={style}>
+        Account
+      </Link>
+      {session.user.role === "ADMIN" && !session.user.mustChangePassword && (
+        <Link href="/admin/accounts/" className={style}>
+          Manage accounts
+        </Link>
+      )}
+      <SignOutButton />
+    </div>
+  ) : (
+    <Link href="/sign-in/" className={style}>
+      Sign in
+    </Link>
+  );
+}
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-50">
@@ -47,7 +69,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Suspense fallback={<NavigationFallback />}>
               <MainNavigation links={links} />
             </Suspense>
-            <SignInDialog />
+            <Suspense
+              fallback={<span className="text-sm">Checking access…</span>}
+            >
+              <SessionNavigation />
+            </Suspense>
           </div>
         </div>
       </header>
@@ -59,9 +85,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="mx-auto max-w-6xl px-5 pb-8 text-sm text-slate-600 sm:px-8">
-        PemWeb UI preview · No recording, media uploads, or AI processing.
-        Practicum only: temporary review requests, persistent synthetic meeting
-        records in a local database, and a demo session cookie.
+        Saved meetings, manual transcripts, and review notes. Private account
+        access; no recording, media uploads, or AI processing yet.
+        <Link href="/about/" className="ml-3 underline">
+          About PrivateSession
+        </Link>
       </footer>
     </div>
   );

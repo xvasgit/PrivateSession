@@ -26,11 +26,14 @@
     "db:verify": "tsx scripts/verify-lab-db.ts",
     "db:test": "tsx scripts/test-meeting-db.ts",
     "postinstall": "prisma generate",
-    "check": "npm run lint && npm run typecheck && npm test && npm run format:check"
+    "check": "npm run lint && npm run typecheck && npm test && npm run format:check",
+    "auth:bootstrap": "tsx scripts/bootstrap-accounts.ts",
+    "test:access": "tsx scripts/test-access.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
+    "better-auth": "1.7.18",
     "dotenv": "^18.0.9",
     "next": "16.4.0",
     "pg": "^8.23.1",

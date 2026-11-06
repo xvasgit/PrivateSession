@@ -1,3 +1,4 @@
+import { LEGACY_USER_ID } from "../lib/auth/accounts";
 import "../scripts/load-lab-env";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
@@ -25,9 +26,18 @@ async function main() {
       let count = 0;
       for (const fixture of seedMeetings) {
         const session = await tx.meetingSession.upsert({
-          where: { sessionCode: fixture.sessionCode },
+          where: {
+            ownerId_sessionCode: {
+              ownerId: LEGACY_USER_ID,
+              sessionCode: fixture.sessionCode,
+            },
+          },
           update: {},
-          create: { sessionCode: fixture.sessionCode, title: fixture.title },
+          create: {
+            ownerId: LEGACY_USER_ID,
+            sessionCode: fixture.sessionCode,
+            title: fixture.title,
+          },
         });
         for (const segment of fixture.segments) {
           const identity = {

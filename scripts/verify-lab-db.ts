@@ -1,3 +1,4 @@
+import { LEGACY_USER_ID } from "../lib/auth/accounts";
 import "./load-lab-env";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -26,6 +27,7 @@ async function main() {
       const snapshot = () =>
         prisma.meetingSession.findMany({
           where: {
+            ownerId: LEGACY_USER_ID,
             sessionCode: { in: seedMeetings.map((item) => item.sessionCode) },
           },
           orderBy: { id: "asc" },
@@ -53,7 +55,12 @@ async function main() {
     let verified = 0;
     for (const fixture of seedMeetings) {
       const session = await prisma.meetingSession.findUniqueOrThrow({
-        where: { sessionCode: fixture.sessionCode },
+        where: {
+          ownerId_sessionCode: {
+            ownerId: LEGACY_USER_ID,
+            sessionCode: fixture.sessionCode,
+          },
+        },
         include: { segments: true },
       });
       for (const expected of fixture.segments) {

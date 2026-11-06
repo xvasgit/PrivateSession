@@ -61,3 +61,16 @@ In compliance with the Tugas 1 rubric (20 points for concrete control plans and 
 5. **R-03 (Loopback Port Collision & Service Squatting — Score: 9 H):**  
    *Why Likelihood is 3:* Port 3000 is shared by numerous web development frameworks. Collision on port 3000 was already observed during testing on 2026-10-13.  
    *How Control Lowers Risk:* Implementing startup port-conflict checks and host firewall boundaries during **Tugas 3A** guarantees traffic is routed strictly to the genuine PrivateSession application.
+
+
+## 2026-11-06 addendum — Account and ownership threats
+
+The Tugas 1 register above remains historical. Persistent web accounts introduce the following additional threats; these are engineering assessments, not revised instructor scores. Full OS/container controls and updated infrastructure evidence remain pending. See the [paired access tests](access-tests.md).
+
+| Risk / threat | Scenario | Initial L × I | Implemented control and evidence | Remaining boundary |
+| --- | --- | --- | --- | --- |
+| R-15 / T-15 | An authenticated user changes a meeting/segment ID to read or modify another owner's content. | 3 × 5 = 15, Very High | Owner-scoped reads and locked mutation checks, no administrator content bypass; positive/negative pairs 01–06 and 12 plus browser request tampering. Relates to original R-13 disclosure and R-08 integrity concerns. | Database/key operators can still decrypt; no end-to-end claim. |
+| R-16 / T-16 | A guessed credential or unrevoked session provides access after password change/deactivation. | 3 × 5 = 15, Very High | Salted scrypt, initial-password replacement, durable eight-hour sessions, revocation and rate limits; expiry/replay/restart tests. Relates to R-11 secret handling. | Local shared rate bucket, no recovery/email/MFA flow; production proxy policy deferred. |
+| R-17 / T-17 | A member injects a role/identity or invokes an administrator action directly. | 3 × 4 = 12, High | Server-owned roles, strict input, repeated administrator checks, restricted member-status operations; pairs 07–09 and blocked-endpoint/browser tests. | Original R-10 concerns Git permissions and is not resolved by application RBAC. |
+
+Corresponding STRIDE threat definitions are appended to [the threat model](threat-model.md). Residual scores require the later infrastructure review; passing app tests alone does not close these risks or R-01 dependency risks.

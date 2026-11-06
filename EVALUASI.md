@@ -141,3 +141,60 @@ Browser cases exercise both entity workflows, field errors and retained inputs, 
 Earlier attempts encountered a test TypeScript union issue, an unresolved Vitest alias, an overly broad string assertion and ambiguous Playwright text/alert locators; these were corrected before the passing results. The sandbox Webpack attempt failed writing generated output (EPERM); the approved outside-sandbox build succeeded. Next.js also stopped builds to display its existing vulnerability notice; retries succeeded, but no framework upgrade was made and the deployment blocker remains. Default Turbopack remains unresolved.
 
 No automated screenshots, video, trace or HAR files were captured. Student steps are in docs/evidence/module-06-capture-guide.md; the actual Module 6 technical document, manual evidence and personal explanation are still pending. No ownership isolation, production accounts, media processing or complete native encrypted vault is claimed. No Git staging, commit, push, branch or tag changes.
+
+
+## 2026-11-05 — Meeting-library revision verification
+
+This entry supersedes descriptions of active sample/practicum routes above; historical results remain unchanged. The current application uses a shared local sign-in, persistent meeting/transcript CRUD, encrypted manual summary/insight/follow-up notes, and metadata-only recording validation. It is not a complete Tugas 2 or production security release.
+
+| Check | Actual result |
+| --- | --- |
+| Pre-migration backup | Custom PostgreSQL dump created outside the Git repository; pg_restore catalog verified. Original key unchanged. |
+| Additive review migration | Applied successfully; two migrations up to date, client regenerated explicitly. |
+| Existing data preservation | SHA-256 comparison of all original meeting/segment fields matched before/after migration and after all test cleanup. |
+| npm run check | ESLint, TypeScript, 133/133 unit tests across 12 files and formatting passed. Retired demo UI tests replaced with current product tests; crypto regressions retained. |
+| npm run build | Failed at the existing Turbopack CSS-worker startup. No default-script or dependency change. |
+| npm run build -- --webpack | Production build passed; only current product routes remain. |
+| npm run db:test | 13/13 real CRUD, constraint and rollback scenarios passed; own fixtures cleaned up. |
+| Database-enabled production browser suite | 48/48 passed at 390/768/1280 widths using two workers on localhost:3101. Final run exited 0 outside the sandbox. |
+| Restart regression script | Passed: transcript/review persisted across an actual owned server restart; old session rejected; new sign-in decrypted saved text. Own fixture/server cleaned up. |
+| npm run db:verify | Failed because LAB-M06-REVIEW is absent; LAB-M06-LECTURE has two segments. This pre-existing fixture deletion was not repaired or hidden. No seed rerun. |
+
+Browser cases verify encrypted review save/edit/clear, pending feedback, retry, server-side length rejection, tampered existing review refusal with unchanged bytes, corrupt transcript display, CRUD/stale-form errors, explicit destructive confirmation, logout/replay, metadata-only selection, removed-route 404s and responsive navigation. Unit crypto cases cover wrong keys, IV/tag/ciphertext mutations, AAD mismatch and authenticated malformed JSON. Tests do not claim KKS roles or private account isolation.
+
+Initial browser failures were assertion issues (a broad alert locator also matched the Next.js announcer; a trailing-slash URL assertion did not wait for logout). These were corrected before the final passing run. Sandbox runs completed all corrected assertions but hung during process teardown; only their owned runners were stopped, and the full suite was repeated outside the sandbox. The restart script also initially matched a hidden textarea as well as visible transcript text; its locator was narrowed and the check rerun successfully.
+
+No automatic screenshots, videos, traces or HAR files were captured. Student evidence and Module 4–6 documents remain untouched. Known framework vulnerability findings remain unresolved; no security upgrade was performed. Manual walkthrough is in README. No staging, commits, pushes, tags or branch switching occurred.
+
+
+## 2026-11-06 — Persistent accounts and ownership verification
+
+This entry supersedes the previous shared-account access limitation. It does not supersede the recorded framework vulnerability, complete all Tugas 2 work, or claim deployment readiness. The student restored the missing seed before this increment; current seed verification now passes.
+
+| Check | Actual result |
+| --- | --- |
+| Preservation and restore rehearsal | Custom PostgreSQL dump/catalog and protected local configuration backups retained outside Git. Restored original data into the separately created `privatesession_auth_rehearsal`; migration/rollback rehearsal preserved original fields before applying to development. |
+| Accounts migration | Applied as the third migration with required legacy ownership and per-owner code uniqueness; original 3 meeting / 4 segment contents retained. |
+| Final preservation and bootstrap | Original meeting/segment SHA-256 matches after tests. Repeat bootstrap leaves account credentials/status unchanged; original encryption key retained. |
+| `npm run check` | ESLint, TypeScript, 145/145 unit tests across 12 files, and formatting passed. Crypto regression tests retained. |
+| `npm run db:test` | 13/13 real CRUD, relationship, duplicate, stale-record and rollback scenarios passed; synthetic fixtures cleaned up. |
+| `npm run db:verify -- --seed-twice` | Two fixture meetings / three authenticated segments verified. Repetition preserved IDs/counts/timestamps/ciphertext/IV and fresh-process decryption succeeded. |
+| `npm run test:access` | 12 positive and 12 negative access cases passed. Additional password, session-expiry/forgery/revocation, changed-secret, development-cookie and actual HTTP 429 checks passed. |
+| `npm run build` | Existing default Turbopack CSS-worker failure persists. |
+| `npm run build -- --webpack` | Production build passed. Next.js first interrupted compilation with its existing vulnerability notice; retry exited 0. No framework upgrade. |
+| Database-enabled production browser suite | 63/63 passed at 390/768/1280 px with two workers on owned localhost:3101. Includes final rate-limit configuration. |
+| Actual restart regression | Passed on the final production build: session, transcript and review survive a real owned-server restart; logout-revoked cookie remains rejected after another restart. |
+| Dependency audit | 14 findings: 9 moderate, 4 high, 1 critical. The critical Next.js finding remains a deployment blocker; audit JSON retained outside Git, no automated dependency upgrades. |
+
+The access matrix is documented in [security/access-tests.md](security/access-tests.md). Browser checks cover initial password replacement, own-profile changes, administrator provisioning/status restrictions, owner-only content including direct Server Action tampering, blocked unused auth endpoints/untrusted origins, production cookies, replay rejection, pending/retry behavior and existing metadata-only media boundaries. Negative access checks compare content state before/after denial. Successful role tests do not demonstrate OS hardening or remove the running server/operator's ability to decrypt stored content.
+
+Verification exposed and corrected an auth-handler trailing-slash mismatch and a library option that disabled rate limiting along with IP tracking. The final handler normalizes the routed URL; the local configuration ignores forwarding headers while retaining the library's shared fallback bucket. Test-only locator/React form-tampering issues were corrected, and the complete suite passed afterward. One empty synthetic administrator left by an interrupted earlier browser run was identified by exact fixture ID/name/email/timestamp and removed without touching the provisioned administrator or legacy records.
+
+No automated screenshots, video, trace or HAR were captured. Student screenshots and historical practicum documents remain unchanged; new manual evidence is still student work. No staging, commits, pushes, tags or branch changes. Linux baseline scans, hardening, SBOM, final three-course evidence and dependency remediation remain separate work.
+
+
+## 2026-11-06 — Tugas 2 evidence consolidation
+
+Current assessment matrices are [PemWeb CRUD/validation](docs/testing/pemweb-tugas-2.md) and [cryptography scenarios/results](docs/testing/crypto-tugas-2.md). The former maps eight CRUD and two relationship cases to student screenshots and the recorded owner-aware database run; it does not claim new manual database inspections.
+
+During documentation, npm test -- tests/crypto tests/database/review.test.ts --reporter=verbose passed 44/44 tests across five files (23:45 local time, exit 0). The twelve documented crypto scenario groups are a separate denominator. This run uses in-memory data and mocked repository calls; earlier real-database/browser/restart evidence remains separately dated. No database mutations or screenshot edits were performed.

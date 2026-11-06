@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "PrivateSession — Privacy-first meeting assistant",
   description:
-    "Privacy-first meeting assistant: explore live transcription, recording review, and upcoming contextual workspaces. Interactive UI demos only.",
+    "Privacy-first meeting assistant: explore live transcription, recording review, and upcoming contextual workspaces. Store manual transcripts and review notes with local shared access.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

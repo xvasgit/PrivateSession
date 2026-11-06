@@ -24,6 +24,9 @@ async function main() {
     log: [],
     errorFormat: "minimal",
   });
+  const userId = randomUUID();
+  const sessionId = randomUUID();
+  const actor = { userId, sessionId };
   const prefix = `M06-TEST-${randomUUID()}`;
   const ids: number[] = [];
   let passed = 0;
@@ -45,8 +48,24 @@ async function main() {
   let id = 0;
   let segmentId = 0;
   try {
+    await db.user.create({
+      data: {
+        id: userId,
+        email: `${userId}@example.invalid`,
+        name: "Synthetic CRUD user",
+        mustChangePassword: false,
+      },
+    });
+    await db.session.create({
+      data: {
+        id: sessionId,
+        userId,
+        token: randomUUID(),
+        expiresAt: new Date(Date.now() + 3600000),
+      },
+    });
     await run("create session through shared mutation", async () => {
-      const path = await mutateMeeting(db, seal, {
+      const path = await mutateMeeting(db, actor, seal, {
         operation: "createMeeting",
         sessionCode: prefix,
         title: "Synthetic integration meeting",
@@ -62,7 +81,7 @@ async function main() {
       assert.equal(rows[0].segments.length, 0);
     });
     await run("update session metadata", async () => {
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "updateMeeting",
         id,
         title: "Updated synthetic meeting",
@@ -71,7 +90,7 @@ async function main() {
       assert.equal((await snapshot())[0].title, "Updated synthetic meeting");
     });
     await run("create encrypted child", async () => {
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "createSegment",
         sessionId: id,
         sequence: 1,
@@ -95,7 +114,7 @@ async function main() {
     });
     await run("update child with fresh IV and unchanged identity", async () => {
       const before = (await snapshot())[0].segments[0];
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "updateSegment",
         id: segmentId,
         sessionId: id,
@@ -111,7 +130,7 @@ async function main() {
     });
     await run("P2002 duplicate code and sequence", async () => {
       await assert.rejects(
-        mutateMeeting(db, seal, {
+        mutateMeeting(db, actor, seal, {
           operation: "createMeeting",
           sessionCode: `${prefix}-edit`,
           title: "Duplicate synthetic",
@@ -119,7 +138,7 @@ async function main() {
         { code: "P2002" },
       );
       await assert.rejects(
-        mutateMeeting(db, seal, {
+        mutateMeeting(db, actor, seal, {
           operation: "createSegment",
           sessionId: id,
           sequence: 1,
@@ -133,6 +152,7 @@ async function main() {
       async () => {
         const absent = await db.meetingSession.create({
           data: {
+            ownerId: userId,
             sessionCode: `${prefix}-absent`,
             title: "Temporary synthetic",
           },
@@ -153,7 +173,11 @@ async function main() {
           { code: "P2003" },
         );
         await assert.rejects(
-          mutateMeeting(db, seal, { operation: "deleteMeeting", id }),
+          mutateMeeting(db, actor, seal, {
+            operation: "deleteMeeting",
+            confirmation: "on",
+            id,
+          }),
           { code: "P2003" },
         );
       },
@@ -187,13 +211,14 @@ async function main() {
       async () => {
         const other = await db.meetingSession.create({
           data: {
+            ownerId: userId,
             sessionCode: `${prefix}-other`,
             title: "Other synthetic session",
           },
         });
         ids.push(other.id);
         await assert.rejects(
-          mutateMeeting(db, seal, {
+          mutateMeeting(db, actor, seal, {
             operation: "updateSegment",
             id: segmentId,
             sessionId: other.id,
@@ -202,8 +227,9 @@ async function main() {
           { code: "P2025" },
         );
         await assert.rejects(
-          mutateMeeting(db, seal, {
+          mutateMeeting(db, actor, seal, {
             operation: "deleteSegment",
+            confirmation: "on",
             id: segmentId,
             sessionId: other.id,
           }),
@@ -212,8 +238,9 @@ async function main() {
       },
     );
     await run("delete child and reject stale update with P2025", async () => {
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "deleteSegment",
+        confirmation: "on",
         id: segmentId,
         sessionId: id,
       });
@@ -222,7 +249,7 @@ async function main() {
         0,
       );
       await assert.rejects(
-        mutateMeeting(db, seal, {
+        mutateMeeting(db, actor, seal, {
           operation: "updateSegment",
           id: segmentId,
           sessionId: id,
@@ -235,12 +262,13 @@ async function main() {
       "delete empty parent and reject stale parent update",
       async () => {
         const other = ids.at(-1)!;
-        await mutateMeeting(db, seal, {
+        await mutateMeeting(db, actor, seal, {
           operation: "deleteMeeting",
+          confirmation: "on",
           id: other,
         });
         await assert.rejects(
-          mutateMeeting(db, seal, {
+          mutateMeeting(db, actor, seal, {
             operation: "updateMeeting",
             id: other,
             sessionCode: `${prefix}-stale`,
@@ -251,13 +279,13 @@ async function main() {
       },
     );
     await run("transaction deletes parent and children together", async () => {
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "createSegment",
         sessionId: id,
         sequence: 2,
         content: "Synthetic transaction segment",
       });
-      await mutateMeeting(db, seal, {
+      await mutateMeeting(db, actor, seal, {
         operation: "deleteAll",
         id,
         confirmation: "on",
@@ -276,7 +304,11 @@ async function main() {
       // Explicit IDs plus a run-unique code guard; never reset or delete seed/user rows.
       await db.$transaction(async (tx) => {
         const owned = await tx.meetingSession.findMany({
-          where: { id: { in: ids }, sessionCode: { startsWith: prefix } },
+          where: {
+            ownerId: userId,
+            id: { in: ids },
+            sessionCode: { startsWith: prefix },
+          },
           select: { id: true },
         });
         const ownIds = owned.map((row) => row.id);
@@ -286,6 +318,7 @@ async function main() {
         await tx.meetingSession.deleteMany({ where: { id: { in: ownIds } } });
       });
     } finally {
+      await db.user.deleteMany({ where: { id: userId } });
       await db.$disconnect();
     }
   }

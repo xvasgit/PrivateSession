@@ -1,17 +1,17 @@
-import { requireDemoSession } from "@/lib/practicum/session.server";
-import { MeetingLabBanner } from "@/components/meetings/lab-banner";
-import { MeetingForm } from "@/components/meetings/lab-form";
+import { requireActor } from "@/lib/auth/session.server";
+import { LocalAccessNotice } from "@/components/meetings/local-notice";
+import { MeetingForm } from "@/components/meetings/meeting-form";
 import { PageHeading } from "@/components/ui/page-heading";
 
 export default async function NewMeetingPage() {
-  await requireDemoSession();
+  await requireActor();
   return (
     <>
-      <MeetingLabBanner />
+      <LocalAccessNotice />
       <PageHeading
-        eyebrow="Synthetic metadata"
+        eyebrow="Meeting library"
         title="New meeting"
-        description="Use a unique, case-sensitive session code. Creating a meeting does not schedule processing."
+        description="Give your meeting a title and a unique session code. Then paste a transcript and add your review notes."
       />
       <MeetingForm />
     </>

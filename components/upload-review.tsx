@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import {
   startTransition,
   useActionState,
@@ -16,9 +17,6 @@ import {
   type MediaSelection,
   type MediaValidationState,
 } from "@/lib/workflows/media";
-import { sampleAnalysis } from "@/lib/workflows/samples";
-import { SampleOutput } from "./sample-output";
-import { EncryptionPreview } from "./encryption-preview";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 
@@ -26,7 +24,6 @@ export function UploadReview() {
   const picker = useRef<HTMLInputElement>(null);
   const [selection, setSelection] = useState<MediaSelection | null>(null);
   const [error, setError] = useState<string>();
-  const [sampleVisible, setSampleVisible] = useState(false);
   const [revision, setRevision] = useState(0);
   const busy = useRef(false);
   const [validation, dispatch, pending] = useActionState(
@@ -178,48 +175,24 @@ export function UploadReview() {
           </p>
         </form>
       </Card>
-      <div className="space-y-4">
-        <SampleOutput
-          title="Analysis preview"
-          description="This fixed synthetic design review is not based on your selected file. Potential gaps are review prompts, not verified facts."
-          empty="No analysis yet. Try the sample to explore summaries, insights, and follow-ups."
+      <Card>
+        <h2 className="text-xl font-semibold">Already have a transcript?</h2>
+        <p className="my-4 leading-7 text-slate-600">
+          Create a meeting, paste your transcript, and save your own summary,
+          insights, and follow-ups. This workflow is independent of the selected
+          recording.
+        </p>
+        <Link
+          href="/meetings/new/"
+          className="inline-block rounded-xl bg-teal-800 px-4 py-3 font-semibold text-white"
         >
-          {sampleVisible && (
-            <div className="mt-5 space-y-5">
-              <p role="status" className="text-sm font-semibold text-teal-800">
-                Demo analysis · Synthetic content, unrelated to your file
-              </p>
-              {sampleAnalysis.map((section) => (
-                <section key={section.title}>
-                  <h3 className="font-semibold">{section.title}</h3>
-                  <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-700">
-                    {section.items.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
-            </div>
-          )}
-        </SampleOutput>
-        <div className="flex flex-wrap gap-3">
-          <Button
-            type="button"
-            onClick={() => setSampleVisible(true)}
-            disabled={sampleVisible}
-          >
-            Try sample analysis
-          </Button>
-          {sampleVisible && (
-            <Button type="button" onClick={() => setSampleVisible(false)}>
-              Reset sample analysis
-            </Button>
-          )}
-        </div>
-        {sampleVisible && (
-          <EncryptionPreview artifact={{ kind: "sample-review" }} />
-        )}
-      </div>
+          Enter a transcript manually
+        </Link>
+        <p className="mt-4 text-sm text-slate-600">
+          Local sign-in is required. File selection does not create a meeting or
+          attach a recording.
+        </p>
+      </Card>
     </div>
   );
 }

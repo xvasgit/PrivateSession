@@ -1,22 +1,24 @@
 import Link from "next/link";
-import { requireDemoSession } from "@/lib/practicum/session.server";
+import { requireActor } from "@/lib/auth/session.server";
 import { getPrisma } from "@/lib/prisma";
 import {
-  MeetingLabBanner,
+  LocalAccessNotice,
   DatabaseUnavailable,
-} from "@/components/meetings/lab-banner";
+} from "@/components/meetings/local-notice";
 import { PageHeading } from "@/components/ui/page-heading";
 
 export default async function MeetingsPage() {
-  await requireDemoSession();
+  const actor = await requireActor();
   const records = await (async () => {
     try {
       return await getPrisma().meetingSession.findMany({
+        where: { ownerId: actor.userId },
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         select: {
           id: true,
           title: true,
           sessionCode: true,
+          createdAt: true,
           _count: { select: { segments: true } },
         },
       });
@@ -26,11 +28,11 @@ export default async function MeetingsPage() {
   })();
   return (
     <>
-      <MeetingLabBanner />
+      <LocalAccessNotice />
       <PageHeading
-        eyebrow="Persistent local lab"
-        title="Meeting sessions"
-        description="Create synthetic sessions and manage their encrypted transcript segments."
+        eyebrow="Your meeting library"
+        title="Meetings"
+        description="Keep transcripts and manually entered reviews together, ready to revisit."
       />
       <Link
         href="/meetings/new/"
@@ -41,7 +43,10 @@ export default async function MeetingsPage() {
       {records === null ? (
         <DatabaseUnavailable />
       ) : records.length === 0 ? (
-        <p>No lab meetings yet.</p>
+        <p>
+          No meetings yet. Create your first meeting to add a transcript and
+          review notes.
+        </p>
       ) : (
         <ul className="space-y-4">
           {records.map((row) => (
@@ -56,7 +61,10 @@ export default async function MeetingsPage() {
                 {row.title}
               </Link>
               <p className="break-words">
-                {row.sessionCode} · {row._count.segments} segments
+                {row.sessionCode} · {row._count.segments} segments ·{" "}
+                <time dateTime={row.createdAt.toISOString()}>
+                  {row.createdAt.toISOString().slice(0, 10)}
+                </time>
               </p>
             </li>
           ))}

@@ -29,3 +29,16 @@
 ---
 
 *Notes: Threats T-01 through T-11 address the running prototype and its immediate toolchain. Threats T-12 through T-14 address planned native desktop capabilities, establishing security requirements for Tugas 2, Tugas 3, and Final Project.*
+
+
+## 2026-11-06 addendum — Persistent account boundary
+
+The original DFD and threats above describe the Tugas 1 baseline. These additions describe the current browser → authenticated Next.js server → PostgreSQL boundary; the new model identifiers below are not retroactive edits to that DFD.
+
+| Threat | STRIDE | Current target and scenario | Evidence / related original threats |
+| --- | --- | --- | --- |
+| T-15 | Information Disclosure / Tampering | An authenticated account submits another owner's meeting or segment ID to read, update or delete private content. | Owner checks and unchanged-state rejection tests; expands T-13/T-08 to persistent web records. |
+| T-16 | Spoofing | An attacker guesses a password or replays a session after logout, password replacement or deactivation. | Salted password hashes, durable expiry/revocation, rate-limit and replay tests; related to T-11 secret disclosure. |
+| T-17 | Elevation of Privilege | A member injects a role/target identity or calls account-management endpoints without administrator authority. | Server-owned roles, protected member administration, request-tampering tests; distinct from original T-10 Git access. |
+
+See [risk-register.md](risk-register.md) and [access-tests.md](access-tests.md). Host/container hardening, production recovery, dependency remediation and final evidence remain outside this application increment.

@@ -6,7 +6,7 @@ const recording = {
   buffer: Buffer.from("PRIVATE_MEDIA_SENTINEL"),
 };
 
-test("validates metadata only on explicit submission and preserves independent samples", async ({
+test("validates metadata only on explicit submission without creating a meeting", async ({
   page,
 }) => {
   const posts: string[] = [];
@@ -22,7 +22,9 @@ test("validates metadata only on explicit submission and preserves independent s
   await page
     .getByLabel("Audio or video recording", { exact: true })
     .setInputFiles(recording);
-  await page.getByRole("button", { name: "Try sample analysis" }).click();
+  await expect(
+    page.getByRole("button", { name: "Try sample analysis" }),
+  ).toHaveCount(0);
   expect(posts).toEqual([]);
   await button.focus();
   await page.keyboard.press("Enter");
@@ -32,7 +34,10 @@ test("validates metadata only on explicit submission and preserves independent s
   expect(posts[0]).not.toContain("PRIVATE_MEDIA_SENTINEL");
   expect(posts[0]).not.toContain("filename=");
   await expect(
-    page.getByRole("heading", { name: "Summary", exact: true }),
+    page.getByRole("link", {
+      name: "Enter a transcript manually",
+      exact: true,
+    }),
   ).toBeVisible();
   expect(
     await page.evaluate(

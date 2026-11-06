@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
-import { requireDemoSession } from "@/lib/practicum/session.server";
+import { requireActor } from "@/lib/auth/session.server";
 import { getPrisma } from "@/lib/prisma";
 import { positiveId } from "@/lib/meetings/schema";
-import { MeetingForm } from "@/components/meetings/lab-form";
+import { MeetingForm } from "@/components/meetings/meeting-form";
 import {
-  MeetingLabBanner,
+  LocalAccessNotice,
   DatabaseUnavailable,
-} from "@/components/meetings/lab-banner";
+} from "@/components/meetings/local-notice";
 import { PageHeading } from "@/components/ui/page-heading";
 
 export default async function EditMeetingPage({
@@ -14,14 +14,14 @@ export default async function EditMeetingPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireDemoSession();
+  const actor = await requireActor();
   const id = positiveId.safeParse((await params).id);
   if (!id.success) notFound();
   const result = await (async () => {
     try {
       return {
         record: await getPrisma().meetingSession.findUnique({
-          where: { id: id.data },
+          where: { id: id.data, ownerId: actor.userId },
         }),
       };
     } catch {
@@ -31,18 +31,18 @@ export default async function EditMeetingPage({
   if (!result)
     return (
       <>
-        <MeetingLabBanner />
+        <LocalAccessNotice />
         <DatabaseUnavailable />
       </>
     );
   if (!result.record) notFound();
   return (
     <>
-      <MeetingLabBanner />
+      <LocalAccessNotice />
       <PageHeading
-        eyebrow="Synthetic metadata"
+        eyebrow="Meeting library"
         title="Edit meeting"
-        description="Changing title or code keeps the numeric identity used to authenticate encrypted segments."
+        description="Update the meeting title or its unique code. Your saved transcript and review stay with this meeting."
       />
       <MeetingForm
         record={{

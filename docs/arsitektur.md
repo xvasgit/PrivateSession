@@ -1,64 +1,35 @@
-# Architecture & Implementation Boundaries
+# Architecture and Implementation Boundaries
 
-## Current Implementation
+## Current application
 
-One repository, one Next.js application served on local loopback, with a stateless metadata-validation Server Action and no public REST API. Overview (`/`), Live Transcription (`/live/`), and Upload & Review (`/upload/`) share a responsive shell with active navigation and an informational Sign In dialog. Server-rendered page shells contain narrowly scoped client components for forms, file selection, and sample controls.
+One local Next.js application uses App Router, Server Actions, Zod 4, Prisma 7 and PostgreSQL. Public Overview, Upload & Review, Live Transcription explanation and About pages share a responsive shell. `/sign-in/` authenticates a persistent account; `/meetings/` supplies the library, creation, detail and metadata editing. The library authentication HTTP boundary is `/api/auth/`; no companion import API exists.
 
-`lib/workflows/` separates typed capture preferences, validation, metadata-only media checks, and fixed synthetic transcript/analysis fixtures from rendering. Setup validates consent and source restrictions without device APIs. File selection inspects only name/size and retains metadata; no content is read. Explicit sample actions are independent of inputs. Transcript playback uses a timer cleaned up on pause/stop/reset/unmount; all state is in memory and resets on reload.
+Meeting actions verify the session, validate input, perform repository operations, revalidate pages and redirect outside mutation catch blocks. Review saves return a success message after revalidation. Inputs remain after rejection/network failure. Prisma P2002/P2003/P2025 map to safe errors; raw database fields and secrets are not logged.
 
-There is no capture, media upload, inference, production authentication, or MCP integration. The prior library/setup routes remain retired; legacy draft validation remains regression-tested. The loopback Next.js server supplies assets, HTML, and React Server Component responses for navigation. Public live fields, notes, and encryption previews remain in browser memory. Upload metadata leaves the browser only when the user explicitly chooses Validate selection. The separate Module 5 practicum sends synthetic credentials/request fields and uses a demo session cookie. Module 6 adds persistent local database records as described below.
+## Persistence and encryption
 
-The picker and `app/upload/actions.ts` share a Zod 4 schema in `lib/workflows/media.ts`. Explicit FormData submits only filename and decimal byte count; the server parses sizes without blank-value coercion and independently validates both fields. The typed response contains errors or metadata with a derived media category. `useActionState` handles pending/failure/retry, while selection revisions suppress stale results after replacement/removal. No file contents are read, persisted, or logged by the action. Metadata validation is not authenticity, content, or codec validation. This public workflow remains independent of the practicum.
+`MeetingSession` has many `TranscriptSegment` children. IDs, case-sensitive session codes unique within an owner, compound `(sessionId, sequence)` uniqueness and the Restrict FK are preserved. Segment identity stays fixed on text edits. Delete-all uses one interactive transaction; ordinary deletion is rejected when children exist.
 
-## Removable Module 5 Practicum
+The additive review migration adds nullable `reviewCiphertext` and `reviewIv` to the parent. A database check requires both null or both present with a 12-byte IV and at least a 16-byte ciphertext/tag. Existing records start with no review; no seed overwrite or key rotation occurs.
 
-`lib/practicum/` holds a shared four-field Zod schema and server-only record/session stores. The demo routes use request-time session checks in every protected page and mutation, with a presence-only proxy as an optimistic convenience. A single environment-configured synthetic account owns its records; all users sharing those credentials share access. An opaque random cookie references an eight-hour server-side session, rotates on sign-in, and is revoked on logout. Secure is enabled in production; HttpOnly, SameSite=Lax, Path=/, and Max-Age=28800 are always applied.
+The encrypted review payload is `{ version: 1, summary, insights, followUps }`. Every string is limited to 10,000 characters; whitespace-only fields normalize to empty, otherwise text is preserved. All-empty saves set both columns null. Review writes lock the parent row within a transaction, authenticate any current review, and then replace both fields atomically. Invalid stored content blocks editing and clearing, including submissions from a stale form.
 
-Creation follows session → schema → per-owner case-insensitive title uniqueness → synchronous insertion → list revalidation → detail redirect. Only expected validation messages or generic failures reach the form. Controlled inputs suppress React's automatic reset to preserve select/checkbox state after failure. The initial list is empty and contains only created records; no file or AI result is involved.
+The server imports the original Base64 32-byte key as non-exportable AES-256-GCM. Both transcript and review flows use fresh CSPRNG 12-byte IVs and 128-bit tags. Review AAD is `meeting-session:v1:meeting-review:v1:<id>`; transcript AAD is unchanged. Review JSON is validated again after authenticated decryption. This is server-readable encryption at rest, not end-to-end encryption or replay protection. Purpose-separated keys and rotation remain deferred.
 
-The global process-local stores survive development module refresh but not server restart, scaling across processes, or deployment. Logout revokes the session but retains records until restart. This is removable educational infrastructure, not production identity/storage or encryption integration. Keep its records, routes, access controls, cookie handling, and tests together when later removing it. Technical-document writing and manual screenshots are deferred; see README for capture steps.
+## Access and privacy
 
-The shared `EncryptionPreview` client component invokes `lib/crypto/workflow-encryption.ts` after live setup validation or an explicit synthetic review request. The adapter snapshots only the relevant JSON, generates a temporary non-exportable key and kind-prefixed artifact ID, calls the unchanged AES-GCM helper, and authenticates/decrypts before requiring exact recovery. Only the encrypted envelope and artifact ID reach UI state; the key and recovered plaintext are not returned. The sample-review branch accepts no file metadata or contents.
+Better Auth 1.7.18 uses the existing Prisma client with User, credential Account, Session, Verification and RateLimit tables. User role/status/initial-password flags are server-owned. A separate signing secret protects library cookies; password hashes use the library's salted scrypt. Sessions have an absolute eight-hour lifetime, survive restarts, and are checked against the database without cookie caching. Current account status is rechecked on every protected request. Logout removes its session; deactivation/password changes revoke all sessions.
 
-Each preparation mounts a new verification instance. Editing a draft or resetting a sample unmounts it; pending results are ignored after unmount. Duplicate actions are disabled while busy, and failures return no success envelope. Verification is a demonstration: plaintext previews stay visible, key references expire after the operation without guaranteed memory erasure, and nothing is saved or recoverable later.
+Member and administrator share the same owner-only meeting policy. Administration exposes identity/status management only. No impersonation, role editing, existing-password reset, account deletion or member-content access is implemented. Profiles edit name/password, not email. Initial-password users may change password or sign out, but cannot read or mutate meetings/admin data. Library credential endpoints remain rate-limited HTTP operations, with strict origin/path boundaries and server Zod validation.
 
-`npm run build` generates `.next/`; `npm start` runs Next.js on `127.0.0.1:3000`. Module 4 removes `output: "export"` to test request-time loading and server errors. Cache Components remain disabled. A future desktop build will need a separate compatibility decision for static assets or a local runtime; the prior static-export integration is not claimed to work unchanged. Tauri/native code has not been scaffolded; system audio and screen capture require platform-specific design, permissions, and tests.
+Meeting mutations lock/recheck the actor's user and session inside a transaction, then lock and require the owner-scoped parent. Deactivation uses the same user lock and revokes sessions. Child identity and ownership are verified through the parent before encryption/decryption/mutation. Pages scope queries to the authenticated owner; inaccessible and missing records share the same response. Proxy only assists missing-cookie navigation.
 
-## Module 4 Routing Extension
+The additive migration creates a disabled credential-free `legacy-lab-member`, explicitly backfills every ownerless meeting, sets the required owner FK with Restrict, and changes uniqueness to `(ownerId, sessionCode)`. Bootstrap separately provisions initial credentials. Seed lookups and fixture cleanup include the owner. Existing IDs, timestamps, AAD, ciphertext, IV and key remain unchanged.
 
-`/about/` repeats the established product description. `/upload/samples/` reads fixed fictional reviews from `lib/workflows/review-samples.server.ts`; its `server-only` marker rejects imports from client modules. The existing browser fixtures remain separate. Detail routes await `params`, validate positive safe integer IDs without leading zeroes, then look up the example or call `notFound()`. IDs 1 and 2 are prerendered by `generateStaticParams`; unknown IDs are validated by the runtime.
+Text is sent intentionally to the same-origin server when forms are saved. Recording validation sends only filename/size; no file contents are read, uploaded or attached. Client storage, device capture and external AI requests are not used. Meeting metadata remains plaintext. Deletion removes live database records, not historical backups.
 
-The sample layout preserves a temporary review workspace note across list/detail navigation. Its template remounts the current review note when the child segment changes. Neither note leaves browser memory or survives reload. Product loading/error fallbacks stay in the sample segment; temporary `/uji/` fixtures exercise a two-second response and an intentional server exception until manual evidence is captured. See [Module 4](praktikum/modul-04.md) for the pending cleanup and verification stages.
+## Deferred companion and historical demos
 
-The KKS asset inventory, DFD, threats, risks, and historical evidence remain the submitted static-export baseline. Runtime rendering and explicit filename/size submission introduce server execution and metadata disclosure in the local lab; this is a documented delta, not a revalidated security assessment. No media contents, database, or external service are introduced.
+The planned live companion will perform device capture and live assistance separately from this web library. No engine, synchronization contract or integration endpoint is implemented in this increment. Contextual Workspaces remains an Overview description.
 
-## Intended Desktop Pipeline (Planned)
-
-Consent and capture selection → visible capture controller → timestamped microphone/system-audio/screen events → on-device ASR/OCR → local question classifier and language model → answer overlay → post-session refinement → encrypted local vault → explicit export/share/delete.
-
-Keep desktop permissions and filesystem access behind narrowly defined native commands. No model/provider is selected or downloaded. Future network access must be explicitly configured; cloud inference is not the default. A consent checkbox in the prototype does not implement OS permissions or participant notification.
-
-## Proposed Module Contracts
-
-- Capture adapter: takes consented source preferences; emits timestamped audio/frame events, availability, and stopped/recording states.
-- Local inference adapter: consumes bounded events; emits timestamped transcript, OCR, question, and streamed answer events; supports cancellation/backpressure.
-- Vault adapter: seals/opens envelopes under stable session IDs; owns durable key lifecycle, encrypted indexes, retention, export, and deletion.
-- UI: shows capture/processing state and errors; invokes typed adapters rather than direct unrestricted OS access.
-
-Production key lifecycle, a native durable vault, production authentication, secure IPC and signed exports remain unimplemented. The browser draft key is intentionally temporary. The separate Module 6 lab uses a persistent environment key and PostgreSQL storage; it is not the native vault.
-
-## Upcoming Workflows
-
-Past media will eventually pass through a validated processing adapter to transcription and structured analysis. Contextual Workspaces will initialize a field-scoped assistant from prompts, documents, images, and explicitly configured MCP tools. No providers, interfaces to external services, or persistent schemas are introduced by this UI revision. Production accounts and durable saving remain upcoming; the isolated lab session is not their implementation.
-
-## Ownership
-
-Codex maintains core code, contracts, test/build tooling, and engineering architecture. Antigravity maintains course documentation architecture and academic traceability. Security/crypto/QA agents retain their assigned roles and coordinate overlapping files. Shared onboarding does not change an agent's identity.
-
-## Module 6 Persistent Meeting Lab (2026-11-02)
-
-The separate /meetings routes share the synthetic demo account with Module 5 but store records in PostgreSQL. Every page and mutation verifies the session; the proxy checks only cookie presence. There are no owner columns or multi-user isolation claims. Keep shared sign-in/session/proxy controls if later removing Module 5 request features.
-
-Server pages use the lazy server-only Prisma client. Zod schemas in lib/meetings/schema.ts define metadata, content, IDs and explicit deletion confirmation. Actions enforce session → schema → database/relationship checks → encryption/mutation → path revalidation → redirect. The shared repository implements CRUD and transactional parent/child deletion; raw errors and submitted fields are not logged. P2002, P2003 and P2025 produce safe messages. Loading, empty, invalid/missing record, unavailable database and failed authentication of encrypted data have distinct UI states.
-
-The persistent server-only key adapter encrypts manually entered synthetic text before writes and decrypts only for authenticated detail rendering. Existing child identity (sessionId, sequence) is immutable, while metadata edits preserve numeric identity. Ciphertext/tag and IV remain BYTEA; titles, codes, order and timestamps are plaintext. Ordinary deletion preserves RESTRICT, while separately confirmed bulk deletion uses an interactive transaction. Test-only failure injection proves rollback without exposing a public failure switch. No media handling or processing is added.
+The temporary request practicum and sample routes/UI have been removed. Original crypto workflow helpers and their fixtures remain for regression testing, not normal UI use. Submitted practicum documents/screenshots describe historical commits. The current Next configuration retains `agentRules: false` and a server runtime; static export is not enabled.

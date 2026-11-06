@@ -232,3 +232,29 @@
 ### 2026-11-03 - README submission link cleanup
 
 - OpenAI Codex, Core Software Engineer: at the student's request, removed the ignored Module 6 capture-guide link from README while retaining the technical-document and evaluation links. Verified the obsolete reference is absent and the README diff has no whitespace errors. No application changes, tests or Git mutations.
+
+
+### 2026-11-05 — Meeting library and manual review product revision
+
+- Agent / tool: OpenAI Codex — Core Software Engineer.
+- User prompt: Implement the approved limited product/interface revision; retain local login, persist encrypted manual notes, remove superseded demo UI, and defer accounts/security/companion work.
+- Output used: current meeting navigation/detail/editing, /sign-in and extracted local session gate, removal of temporary request/sample/capture/encryption demo UI, additive encrypted-review migration, typed server action/repository/crypto adapter, updated product docs, regression tests and isolated restart verification script. Existing feature-card descriptions, media metadata validation and crypto helpers/tests preserved.
+- Verification: installed Next.js form/action guides read; external database backup and unchanged original-data checksums verified; migration applied without reset/reseeding/key replacement. Check passed 133 unit tests plus lint/types/format, Webpack build passed, database scenarios 13/13, production browser tests 48/48 across three widths, actual server restart/persistence check passed. Initial test locator/timing issues fixed. Turbopack default build still fails; old seed verification fails because a seed fixture is absent, left unchanged.
+- Human review / boundaries: README contains manual testing steps. Screenshots remain student work; historical submissions/logs preserved. Local shared access is not private account ownership, password-hash compliance or RBAC. Actual upload, processing, companion and hardening deferred. No Git mutations; existing framework vulnerabilities not upgraded.
+
+
+### 2026-11-06 — Persistent accounts and meeting ownership
+
+- Agent / tool: OpenAI Codex — Core Software Engineer.
+- User prompt: Implement the approved persistent-account/ownership plan, continue after the usage limit, and use the separately created rehearsal database when ready.
+- Output used: pinned Better Auth integration; Prisma account/session/rate-limit tables and transactional ownership migration; explicit bootstrap; sign-in, required initial-password change, profile and limited administrator pages; owner-scoped meeting/review operations; strict auth HTTP boundary and session/status guards; updated seed/verifiers, paired access tests, browser/restart tests, current README/requirements/architecture/traceability and security evidence guidance. Historical documents, original ciphertext/key, student screenshots and previous logs preserved.
+- Data safety: created external database/configuration recovery copies, restored/rehearsed migration in the dedicated database, compared original fields before development migration and after test cleanup, and verified repeat bootstrap does not reset credentials/status. User created the rehearsal database because the development role cannot create databases. No database reset or original-key replacement.
+- Verification: 145 unit tests with lint/types/format; 13/13 database scenarios; repeated seed/fresh-process decryption; 12 positive + 12 negative access cases plus session/password/rate-limit checks; Webpack build; 63/63 browser tests at three widths; actual restart persistence and revoked-cookie rejection. Corrected trailing-slash routing, a rate-limit configuration interaction and test harness issues before passing runs. Default Turbopack failure and 14 dependency findings (including one critical Next.js finding) remain documented; no framework upgrade.
+- Human verification / next: student signs in using privately stored bootstrap credentials, replaces initial passwords, reviews owner/admin behavior and captures evidence manually. Remaining KKS infrastructure controls, crypto key separation and final Tugas 2 evidence are separate work. No automated captures, Git mutations or release/deployment claims. Credentials/tokens/hashes never printed in logs or included in this record.
+
+
+### 2026-11-06 — Tugas 2 scenario/result tables
+
+- OpenAI Codex — Core Software Engineer. User requested suitable PemWeb CRUD and cryptography test tables. Added docs/testing/pemweb-tugas-2.md and docs/testing/crypto-tugas-2.md and linked both from README. Matched scenarios to current source and the 17 student screenshots; distinguished manual observations, prior real database/browser runs, and mocked repository assertions.
+- Verification: focused crypto/review command passed 44/44 tests across five files at 23:45; no PostgreSQL mutations. Checked document links, ten mapped CRUD/relationship cases, three Zod cases, twelve crypto scenario groups and formatting. Prior 13/13 database and 63/63 browser results are explicitly dated and were not rerun here.
+- Human review: student confirms captions and release contents, then handles commit/push/tag and demonstration. No images, application code, dependencies, historical practicum documents or Git metadata changed. No secrets exposed.

@@ -8,7 +8,7 @@ export default function OverviewPage() {
       <PageHeading
         eyebrow="PrivateSession"
         title="Be present. Keep the context."
-        description="A privacy-first assistant for conversations, past recordings, and the context behind your work. Explore interface demos and optional recording metadata validation; your media stays on-device."
+        description="A privacy-first assistant for conversations, past recordings, and the context behind your work. Keep meeting transcripts and manual reviews together. Live capture, recording processing, and contextual workspaces are in development."
       />
       <div className="grid gap-5 lg:grid-cols-3">
         <FeatureCard
@@ -48,10 +48,11 @@ export default function OverviewPage() {
         <h2 className="text-lg font-semibold">Your choices come first</h2>
         <p className="mt-3 max-w-3xl leading-7 text-slate-600">
           Local processing, explicit consent, and control over what is captured
-          and retained guide the product. These capabilities are still being
-          built: this web preview requests no device access and sends no meeting
-          content anywhere. Sample outputs are synthetic, not results from your
-          device or files.
+          and retained guide the product. The local web app stores the meeting
+          text you explicitly save. Transcript and review text are encrypted at
+          rest and decrypted by the server. Recording validation sends only
+          filename and size; media contents stay on-device. Use synthetic data
+          with your private account.
         </p>
       </Card>
     </>

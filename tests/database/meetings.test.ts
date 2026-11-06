@@ -18,8 +18,8 @@ const mocks = vi.hoisted(() => ({
   db: {},
 }));
 vi.mock("server-only", () => ({}));
-vi.mock("../../lib/practicum/session.server", () => ({
-  readDemoSession: mocks.session,
+vi.mock("../../lib/auth/session.server", () => ({
+  readActor: mocks.session,
 }));
 vi.mock("../../lib/prisma", () => ({ getPrisma: () => mocks.db }));
 vi.mock("../../lib/meetings/repository", () => ({
@@ -27,6 +27,8 @@ vi.mock("../../lib/meetings/repository", () => ({
 }));
 vi.mock("../../lib/crypto/transcript-encryption.server", () => ({
   sealTranscript: vi.fn(),
+  sealReview: vi.fn(),
+  openReview: vi.fn(),
 }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
@@ -106,7 +108,10 @@ describe("meeting lab validation", () => {
 describe("protected meeting actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.session.mockResolvedValue({ owner: "synthetic" });
+    mocks.session.mockResolvedValue({
+      userId: "synthetic",
+      sessionId: "session",
+    });
     mocks.mutate.mockResolvedValue("/meetings/1/");
   });
   function data(values: Record<string, string | undefined>) {
@@ -129,6 +134,14 @@ describe("protected meeting actions", () => {
   });
   it.each([
     { ...valid, title: "ab" },
+    { operation: "saveReview", id: "1", summary: "x", insights: "" },
+    {
+      operation: "saveReview",
+      id: "1",
+      summary: "x".repeat(10001),
+      insights: "",
+      followUps: "",
+    },
     { operation: "deleteMeeting", id: "-1" },
     {
       operation: "createSegment",
@@ -150,8 +163,10 @@ describe("protected meeting actions", () => {
     );
     expect(mocks.mutate).toHaveBeenCalledWith(
       mocks.db,
+      { userId: "synthetic", sessionId: "session" },
       expect.any(Function),
       valid,
+      { seal: expect.any(Function), open: expect.any(Function) },
     );
     expect(mocks.mutate.mock.invocationCallOrder[0]).toBeLessThan(
       mocks.revalidate.mock.invocationCallOrder[0],
@@ -178,4 +193,20 @@ describe("protected meeting actions", () => {
     expect(
       meetingError({ code: "P2002" }, "createSegment").fieldErrors,
     ).toHaveProperty("sequence"));
+
+  it("returns review save success only after persistence and revalidation", async () => {
+    const form = data({
+      operation: "saveReview",
+      id: "1",
+      summary: "Synthetic",
+      insights: "",
+      followUps: "",
+    });
+    expect(await saveMeetingCommand({}, form)).toEqual({
+      message: "Review saved.",
+    });
+    expect(mocks.mutate).toHaveBeenCalled();
+    expect(mocks.revalidate).toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
 });

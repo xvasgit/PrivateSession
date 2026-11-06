@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { reviewSchema } from "./review";
 
 export const positiveId = z.preprocess(
   (value) =>
@@ -14,18 +15,25 @@ export const meetingSchema = z.object({
 export const contentSchema = z
   .string()
   .max(10000)
-  .refine((text) => text.trim().length > 0, "Enter synthetic transcript text.");
+  .refine((text) => text.trim().length > 0, "Enter transcript text.");
 export const segmentSchema = z.object({
   sequence: positiveId,
   content: contentSchema,
 });
 export const commands = z.discriminatedUnion("operation", [
+  reviewSchema.extend({ operation: z.literal("saveReview"), id: positiveId }),
   meetingSchema.extend({ operation: z.literal("createMeeting") }),
   meetingSchema.extend({
     operation: z.literal("updateMeeting"),
     id: positiveId,
   }),
-  z.object({ operation: z.literal("deleteMeeting"), id: positiveId }),
+  z.object({
+    operation: z.literal("deleteMeeting"),
+    id: positiveId,
+    confirmation: z.literal("on", {
+      error: "Confirm deletion of this meeting.",
+    }),
+  }),
   z.object({
     operation: z.literal("deleteAll"),
     id: positiveId,
@@ -47,6 +55,9 @@ export const commands = z.discriminatedUnion("operation", [
     operation: z.literal("deleteSegment"),
     id: positiveId,
     sessionId: positiveId,
+    confirmation: z.literal("on", {
+      error: "Confirm deletion of this segment.",
+    }),
   }),
 ]);
 export type MeetingInput = z.infer<typeof meetingSchema>;
