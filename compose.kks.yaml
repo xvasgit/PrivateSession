@@ -1,0 +1,84 @@
+x-app-env: &app-env
+  DATABASE_URL: postgresql://privatesession_app:${KKS_DB_PASSWORD:?Set a URL-safe synthetic lab password}@127.0.0.1:5432/privatesession_dev?schema=public
+  DATA_ENCRYPTION_KEY: ${KKS_DATA_ENCRYPTION_KEY:?Set a dedicated Base64 lab key}
+  BETTER_AUTH_SECRET: ${KKS_AUTH_SECRET:?Set a dedicated lab signing secret}
+  BETTER_AUTH_URL: http://localhost:3000
+
+services:
+  db:
+    image: privatesession-kks:postgres-hardened
+    build:
+      context: ./security/container
+      dockerfile: Dockerfile.postgres
+    user: "70:70"
+    command: ["postgres", "-c", "listen_addresses=127.0.0.1"]
+    environment:
+      POSTGRES_PASSWORD: ${KKS_POSTGRES_PASSWORD:?Set a separate synthetic database admin password}
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      KKS_DB_PASSWORD: ${KKS_DB_PASSWORD:?Set a URL-safe synthetic lab password}
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+      - /var/run/postgresql:uid=70,gid=70,mode=0770
+    volumes:
+      - kks-db-alpine-data:/var/lib/postgresql
+      - ./security/container/init-db.sh:/docker-entrypoint-initdb.d/10-kks-init.sh:ro
+    networks: [lab]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  app:
+    image: privatesession-kks:hardened
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    # Keep the existing loopback-only DB guard; only these lab services share loopback.
+    network_mode: "service:db"
+    environment: *app-env
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs:
+      - /tmp:mode=1777
+      - /app/.next/cache:uid=1000,gid=1000,mode=0700
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  tools:
+    profiles: [tools]
+    image: privatesession-kks:lab-tools
+    build:
+      context: .
+      target: build
+    user: "1000:1000"
+    network_mode: "service:db"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *app-env
+      SHADOW_DATABASE_URL: postgresql://privatesession_app:${KKS_DB_PASSWORD:?Set a URL-safe synthetic lab password}@127.0.0.1:5432/privatesession_shadow?schema=public
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+networks:
+  lab:
+    internal: true
+
+volumes:
+  kks-db-alpine-data:

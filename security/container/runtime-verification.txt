@@ -1,0 +1,75 @@
+Datasource "db": PostgreSQL database "privatesession_dev", schema "public" at "127.0.0.1:5432"
+
+3 migrations found in prisma/migrations
+
+Applying migration `20261102152914_init_meeting_transcripts`
+Applying migration `20261105143000_add_meeting_review`
+Applying migration `20261106010000_add_accounts_ownership`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102152914_init_meeting_transcripts/
+    └─ migration.sql
+  └─ 20261105143000_add_meeting_review/
+    └─ migration.sql
+  └─ 20261106010000_add_accounts_ownership/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Datasource "db": PostgreSQL database "privatesession_auth_rehearsal", schema "public" at "127.0.0.1:5432"
+
+3 migrations found in prisma/migrations
+
+Applying migration `20261102152914_init_meeting_transcripts`
+Applying migration `20261105143000_add_meeting_review`
+Applying migration `20261106010000_add_accounts_ownership`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261102152914_init_meeting_transcripts/
+    └─ migration.sql
+  └─ 20261105143000_add_meeting_review/
+    └─ migration.sql
+  └─ 20261106010000_add_accounts_ownership/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+
+> private-session@0.0.0 db:seed
+> prisma db seed
+
+Running seed command `tsx prisma/seed.ts` ...
+Seed complete: 2 synthetic sessions, 3 authenticated segments. Existing rows preserved.
+
+🌱  The seed command has been executed.
+app read-only|cap-drop|security-opt|published-ports: true|["ALL"]|["no-new-privileges:true"]|{}
+Uid:	1000	1000	1000	1000
+CapEff:	0000000000000000
+NoNewPrivs:	1
+db read-only|cap-drop|security-opt|published-ports: true|["ALL"]|["no-new-privileges:true"]|{}
+Uid:	70	70	70	70
+CapEff:	0000000000000000
+NoNewPrivs:	1
+Unauthenticated meetings request: HTTP 307 to sign-in
+Homepage: HTTP 200
+
+> private-session@0.0.0 test:access
+> tsx scripts/test-access.ts
+
+PASS access pair 1: member own read / other member read
+PASS access pair 2: own meeting edit / cross-owner edit
+PASS access pair 3: own segment create / foreign parent create
+PASS access pair 4: own segment edit / cross-owner edit
+PASS access pair 5: own review save / administrator foreign review
+PASS access pair 6: administrator own library / foreign private detail
+PASS access pair 7: own profile edit / profile identity injection
+PASS access pair 8: administrator provisioning / member provisioning
+PASS access pair 9: administrator status change / member status change
+PASS access pair 10: active account access / disabled old session
+PASS access pair 11: same code across owners / duplicate within owner
+PASS access pair 12: owner deletion / cross-owner bulk deletion
+PASS library password verification, revocation, cookies, and changed-secret rejection.
+PASS development cookie attributes, expired/forged sessions and HTTP rate limiting.
+Access matrix: 12 positive + 12 negative passed. Owned fixtures cleaned up.

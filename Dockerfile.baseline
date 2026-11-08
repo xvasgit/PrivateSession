@@ -1,0 +1,27 @@
+# Initial KKS image: retain the submitted application dependencies for scanning.
+ARG NODE_BASE=node:24-bookworm-slim
+FROM ${NODE_BASE} AS build
+WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY package.json package-lock.json prisma.config.ts ./
+COPY prisma/schema.prisma ./prisma/schema.prisma
+COPY scripts/load-lab-env.ts ./scripts/load-lab-env.ts
+COPY lib/database/lab-config.ts ./lib/database/lab-config.ts
+# Match the npm version used for the submitted lockfile's optional dependencies.
+RUN --mount=type=cache,target=/root/.npm npx --yes npm@11.6.2 ci --no-audit --no-fund
+
+COPY . .
+RUN mkdir -p public && npm run build -- --webpack
+RUN --mount=type=cache,target=/root/.npm npx --yes npm@11.6.2 prune --omit=dev --ignore-scripts --no-audit --no-fund
+
+FROM ${NODE_BASE} AS runtime
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+COPY --from=build /app/package.json /app/next.config.ts ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+
+EXPOSE 3000
+CMD ["node", "node_modules/next/dist/bin/next", "start", "--hostname", "0.0.0.0", "--port", "3000"]

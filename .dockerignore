@@ -1,0 +1,33 @@
+# Allow only inputs required by the application build.
+**
+!package.json
+!package-lock.json
+!next.config.ts
+!tsconfig.json
+!postcss.config.mjs
+!prisma.config.ts
+!proxy.ts
+!app/
+!app/**
+!components/
+!components/**
+!lib/
+!lib/**
+!public/
+!public/**
+!prisma/
+prisma/**
+!prisma/schema.prisma
+!scripts/
+scripts/**
+!scripts/load-lab-env.ts
+
+# Guard allowed directories against accidentally added credentials.
+**/.env
+**/.env.*
+**/.npmrc
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/secrets/

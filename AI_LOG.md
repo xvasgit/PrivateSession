@@ -258,3 +258,18 @@
 - OpenAI Codex — Core Software Engineer. User requested suitable PemWeb CRUD and cryptography test tables. Added docs/testing/pemweb-tugas-2.md and docs/testing/crypto-tugas-2.md and linked both from README. Matched scenarios to current source and the 17 student screenshots; distinguished manual observations, prior real database/browser runs, and mocked repository assertions.
 - Verification: focused crypto/review command passed 44/44 tests across five files at 23:45; no PostgreSQL mutations. Checked document links, ten mapped CRUD/relationship cases, three Zod cases, twelve crypto scenario groups and formatting. Prior 13/13 database and 63/63 browser results are explicitly dated and were not rerun here.
 - Human review: student confirms captions and release contents, then handles commit/push/tag and demonstration. No images, application code, dependencies, historical practicum documents or Git metadata changed. No secrets exposed.
+
+### 2026-11-08 — KKS VM hardening to Lynis 71
+
+- OpenAI Codex — Core Software Engineer. User authorized temporary privileged access to the dedicated PrivateSession-KKS VirtualBox guest and requested further hardening until Lynis reached at least 70. Applied package integrity checks, audit rules for SSH configuration changes, process accounting, package inventory, and targeted kernel protections. Retained SSH TCP forwarding at the user's request.
+- Verification: Lynis 3.0.9 measured 71, up from the original 62. Baseline SHA-256 was unchanged; copied baseline and final reports to `security/hardening/` and checked both transfer hashes. Fresh key login succeeded; password-only and root login were rejected. Confirmed effective SSH settings, UFW, and active auditing and accounting services. Container evidence and student demonstration remain pending.
+
+### 2026-11-08 — KKS container image baseline
+
+- OpenAI Codex — Core Software Engineer. User requested a baseline image build and scan before fixes. Added an allowlisted Docker build context and baseline recipe using the submitted `v0.2` application and lockfile. Pinned the build's npm CLI to the version used for that lockfile to resolve a clean-install compatibility issue.
+- Verification: production Webpack build and TypeScript checks passed; a disposable container with no external network or published ports returned HTTP 200 on the homepage. Trivy 0.76.2 scanned the saved image without the Docker socket and reported 241 findings, including 3 critical. Saved the unfiltered report and scope under `security/scans/`. No dependency remediation, database operations, screenshots, staging, commits, or tags.
+
+### 2026-11-08 — Hardened container images and after evidence
+
+- OpenAI Codex — Core Software Engineer. User requested hardened images, fixes for the critical baseline findings, after-scan and SBOM. Updated Next.js and its lint config to 16.4.5, built a standalone runtime on pinned Debian 13, and set up a separate synthetic Compose lab. Replaced the rejected Debian PostgreSQL candidate with a pinned Alpine image omitting the unused `gosu` binary.
+- Verification: both exact running images scanned with zero critical findings using the same Trivy database as the baseline. Saved two after reports and CycloneDX SBOMs. Both runtime processes are non-root with zero effective capabilities, no new privileges, read-only root filesystems, and no published ports. Applied migrations to isolated lab databases, seeded synthetic records, verified the homepage and unauthenticated redirect, and reran 12 positive plus 12 negative access cases. Student review, manual screenshots, and Git publication remain separate.

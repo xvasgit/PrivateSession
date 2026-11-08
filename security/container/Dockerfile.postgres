@@ -1,0 +1,4 @@
+FROM postgres:18-alpine@sha256:123b17998ccaf47e53b502e8c6a1e79afd8f579c6f3eec83c563da026f957395
+# The lab starts directly as postgres; the root-only step-down helper is unused.
+RUN test -x /usr/local/bin/gosu && rm /usr/local/bin/gosu
+USER 70:70
