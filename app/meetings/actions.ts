@@ -35,11 +35,27 @@ export async function saveMeetingCommand(
       { seal: sealReview, open: openReview },
     );
   } catch (error) {
+    const code =
+      error && typeof error === "object" && "code" in error
+        ? error.code
+        : undefined;
+    if (
+      (parsed.data.operation === "deleteMeeting" ||
+        parsed.data.operation === "deleteAll") &&
+      code === "P2025"
+    ) {
+      console.error("Meeting deletion failed: P2025 (record not found).");
+      throw new Error(
+        "The meeting could not be deleted because it no longer exists.",
+      );
+    }
     // Never log database errors: their metadata can contain submitted values.
     return meetingError(error, parsed.data.operation);
   }
   revalidatePath("/meetings", "layout");
   if (parsed.data.operation === "saveReview")
     return { message: "Review saved." };
+  if (parsed.data.operation === "updateMeeting" && !parsed.data.returnToDetail)
+    return { message: "Meeting changes saved." };
   redirect(destination);
 }

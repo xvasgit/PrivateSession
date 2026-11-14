@@ -94,6 +94,37 @@ describe("meeting lab validation", () => {
       }).success,
     ).toBe(false);
     expect(
+      commands.safeParse({
+        operation: "deleteAll",
+        id: "1",
+        confirmation: "false",
+      }).success,
+    ).toBe(false);
+    expect(
+      commands.parse({
+        operation: "deleteAll",
+        id: "1",
+        confirmation: "true",
+      }),
+    ).toMatchObject({ operation: "deleteAll", id: 1, confirmation: true });
+    expect(
+      commands.parse({
+        operation: "updateMeeting",
+        id: "1",
+        sessionCode: "lab",
+        title: "Synthetic",
+        returnToDetail: "false",
+      }),
+    ).toMatchObject({ returnToDetail: false });
+    expect(
+      commands.parse({
+        operation: "updateMeeting",
+        id: "1",
+        sessionCode: "lab",
+        title: "Synthetic",
+      }),
+    ).toMatchObject({ returnToDetail: true });
+    expect(
       commands.parse({
         operation: "updateSegment",
         id: "2",
@@ -207,6 +238,36 @@ describe("protected meeting actions", () => {
     });
     expect(mocks.mutate).toHaveBeenCalled();
     expect(mocks.revalidate).toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  it("stays on edit page without redirecting when returnToDetail is false", async () => {
+    const form = data({
+      operation: "updateMeeting",
+      id: "1",
+      sessionCode: "lab",
+      title: "Synthetic updated",
+      returnToDetail: "false",
+    });
+    expect(await saveMeetingCommand({}, form)).toEqual({
+      message: "Meeting changes saved.",
+    });
+    expect(mocks.mutate).toHaveBeenCalled();
+    expect(mocks.revalidate).toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  it("rethrows P2025 on delete operations so the route error boundary handles stale deletion", async () => {
+    mocks.mutate.mockRejectedValue({ code: "P2025" });
+    const form = data({
+      operation: "deleteMeeting",
+      id: "1",
+      confirmation: "on",
+    });
+    await expect(saveMeetingCommand({}, form)).rejects.toThrow(
+      "The meeting could not be deleted because it no longer exists.",
+    );
+    expect(mocks.revalidate).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 });

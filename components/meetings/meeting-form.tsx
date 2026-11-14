@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useId } from "react";
+import { useActionState, useId, useState } from "react";
 import { unstable_rethrow } from "next/navigation";
 import { saveMeetingCommand } from "@/app/meetings/actions";
 import type { MeetingFormState } from "@/lib/meetings/schema";
@@ -9,11 +9,49 @@ type Field = {
   name: string;
   label: string;
   value?: string;
-  type?: "text" | "number" | "textarea" | "checkbox";
+  type?: "text" | "number" | "textarea" | "checkbox" | "select";
   min?: number;
   max?: number;
   optional?: boolean;
+  options?: { label: string; value: string }[];
 };
+
+function TextareaField({
+  field,
+  shared,
+}: {
+  field: Field;
+  shared: {
+    id: string;
+    name: string;
+    required: boolean;
+    defaultValue?: string;
+    "aria-invalid": boolean;
+    "aria-describedby"?: string;
+    className: string;
+  };
+}) {
+  const [text, setText] = useState(field.value ?? "");
+  const remaining = field.max !== undefined ? field.max - text.length : null;
+  return (
+    <>
+      <textarea
+        {...shared}
+        defaultValue={undefined}
+        value={text}
+        onChange={(event) => setText(event.target.value)}
+        rows={4}
+        maxLength={field.max}
+      />
+      {remaining !== null && (
+        <p className="mt-1 text-sm text-slate-600">
+          {remaining} characters remaining
+        </p>
+      )}
+    </>
+  );
+}
+
 export function MeetingActionForm({
   operation,
   hidden = {},
@@ -35,6 +73,14 @@ export function MeetingActionForm({
         return await saveMeetingCommand(previous, data);
       } catch (error) {
         unstable_rethrow(error);
+        if (
+          (error && typeof error === "object" && "digest" in error) ||
+          (error instanceof Error &&
+            error.message ===
+              "The meeting could not be deleted because it no longer exists.")
+        ) {
+          throw error;
+        }
         return {
           message:
             "The request could not be completed. Your entries are still here; please retry.",
@@ -74,7 +120,19 @@ export function MeetingActionForm({
                 {field.label}
               </label>
               {field.type === "textarea" ? (
-                <textarea {...shared} rows={4} maxLength={field.max} />
+                <TextareaField
+                  key={field.value ?? ""}
+                  field={field}
+                  shared={shared}
+                />
+              ) : field.type === "select" ? (
+                <select {...shared}>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               ) : field.type === "checkbox" ? (
                 <input
                   {...shared}
@@ -137,6 +195,20 @@ export function MeetingForm({
           min: 3,
           max: 80,
         },
+        ...(record
+          ? [
+              {
+                name: "returnToDetail",
+                label: "After saving",
+                type: "select" as const,
+                value: "true",
+                options: [
+                  { label: "Return to meeting detail", value: "true" },
+                  { label: "Stay on edit page", value: "false" },
+                ],
+              },
+            ]
+          : []),
       ]}
     />
   );

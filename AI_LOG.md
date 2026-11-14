@@ -119,10 +119,6 @@
 - Verification: Validated SVG XML tree with Python; validated table column counts and 1:1 T-xx/R-xx mapping via automated Python script; verified `npm run check` (44/44 unit tests, strict typecheck, ESLint, Prettier) passing 100%.
 - Human verification / edits: User provided slide images confirming the exact official risk scale.
 
-
-
-
-
 ## 2026-10-18 - Module 4 App Router practicum
 
 - Tool / Agent: ChatGPT (Codex), Core Software Engineer.
@@ -132,7 +128,6 @@
 - Corrections / rationale: Initial browser run had three selector failures from the extra Next.js alert announcer; scoped the selector to main and reran successfully. Sandbox teardown required stopping only identified test servers and running E2E outside the sandbox. A stalled stdin-based DOM probe was replaced with a temporary file-based check, then removed. No production behavior was changed to hide test failures.
 - Boundaries / human verification: No assistance with the individual test in PDF section G; no capture, inference, media uploads, accounts, persistence, or changes to crypto APIs. Screenshot placeholders, Lighthouse/React DevTools verification, and Name/NIM remain for the student. The temporary negative import was restored after saving compiler output; instructions permit manual reproduction. /uji remains until manual captures are complete, followed by final cleanup/build. No staging, commits, pushes, merges, tags, or branch changes.
 
-
 ## 2026-10-18 - Module 4 manual evidence review
 
 - Agent / tool: ChatGPT (Codex), Core Software Engineer.
@@ -140,18 +135,15 @@
 - Reviewed and linked all 11 student images. Loading/error and server-only evidence are present; Link navigation, return-to-list, and client hooks need additional manual captures. Preserved student identity edits.
 - Embedded essential historical check/build outputs and results so raw TXT evidence is optional. Checked PDF E.4/H and Markdown links/format. No screenshots created, files deleted, code changed, tests rerun, or Git writes performed. Student review and fixture cleanup/final testing remain pending.
 
-
 ### 2026-10-18 - Module 4 evidence scope correction
 
 - Agent: Codex (Core Software Engineer). User requested removing optional A1 evidence. Rechecked the Module 4 PDF: viewport screenshots and Lighthouse are broader PAW milestone requirements, not Module 4 E/H deliverables. Removed A1 instructions, its verification row and pending checklist reference from modul-04.md. Preserved required Module 4 evidence and actual multi-viewport test results. No code or Git writes.
-
 
 ### 2026-10-18 - Updated Module 4 screenshot acceptance
 
 - Agent: Codex - Core Software Engineer.
 - Reviewed updated nav-link/layout-return and three new React DevTools images. Confirmed document-free Link navigation, retained layout note on return, and hooks for MainNavigation, ReviewNote and UploadReview. Linked all 14 manual images with evidence-specific captions.
 - Removed reappearing A1/Lighthouse requirements and repaired truncated finalization checklist and duplicate table fragments in the current document. Preserved pending fixture cleanup, final tests and student Git publication. Validated formatting and image links; no application edits, screenshot capture, or Git writes.
-
 
 ### 2026-10-18 - Module 4 document after fixture removal
 
@@ -203,7 +195,6 @@
 - Agent: Codex - Core Software Engineer. User chose to keep the current masked M14 image. Embedded it and removed its pending capture instructions; documented that the truncated cookie name and static screenshot cannot independently verify the full session/replay sequence. All 14 images are now linked.
 - Updated current document status and checked local links; preserved prior log entries. No image/code edits, tests, or Git mutations.
 
-
 ### 2026-11-02 - Module 6 Prisma and encrypted transcript foundation
 
 - Agent / tool: OpenAI Codex - Core Software Engineer.
@@ -211,7 +202,6 @@
 - Output used: Prisma config/schema/migration, lazy server-only client, local database boundary, binary transcript adapter and key loader, transactional upsert seed, fresh-process verifier, package scripts/client generation and generated-file exclusions. Updated README, crypto decisions, attribution and actual evaluation. Existing browser demonstrations and Module 5 code preserved.
 - Verification: PostgreSQL 18.4 targets verified empty before reviewed migration; seed twice succeeded, direct count 2 sessions/3 segments, fresh-process decryption passed. Check passed 118 unit tests plus lint/types/format. Config/schema/client/migration status, exclusions and manifest/lock consistency checked. Default Turbopack builds failed at CSS-worker startup; Webpack production build passed. Auxiliary snapshot/offline lock refresh failures are recorded in EVALUASI.
 - Human verification / next: Student retains the original lab key privately and can inspect tables in pgAdmin. CRUD, ownership policy, errors/rollback evidence, ten database scenarios, manual captures and Module 6 technical document remain future work. No passwords/keys displayed or replaced, no Git mutations, no framework upgrade, new UI or automatic screenshots.
-
 
 ### 2026-11-02 - Module 6 meeting CRUD and transaction lab
 
@@ -233,7 +223,6 @@
 
 - OpenAI Codex, Core Software Engineer: at the student's request, removed the ignored Module 6 capture-guide link from README while retaining the technical-document and evaluation links. Verified the obsolete reference is absent and the README diff has no whitespace errors. No application changes, tests or Git mutations.
 
-
 ### 2026-11-05 — Meeting library and manual review product revision
 
 - Agent / tool: OpenAI Codex — Core Software Engineer.
@@ -241,7 +230,6 @@
 - Output used: current meeting navigation/detail/editing, /sign-in and extracted local session gate, removal of temporary request/sample/capture/encryption demo UI, additive encrypted-review migration, typed server action/repository/crypto adapter, updated product docs, regression tests and isolated restart verification script. Existing feature-card descriptions, media metadata validation and crypto helpers/tests preserved.
 - Verification: installed Next.js form/action guides read; external database backup and unchanged original-data checksums verified; migration applied without reset/reseeding/key replacement. Check passed 133 unit tests plus lint/types/format, Webpack build passed, database scenarios 13/13, production browser tests 48/48 across three widths, actual server restart/persistence check passed. Initial test locator/timing issues fixed. Turbopack default build still fails; old seed verification fails because a seed fixture is absent, left unchanged.
 - Human review / boundaries: README contains manual testing steps. Screenshots remain student work; historical submissions/logs preserved. Local shared access is not private account ownership, password-hash compliance or RBAC. Actual upload, processing, companion and hardening deferred. No Git mutations; existing framework vulnerabilities not upgraded.
-
 
 ### 2026-11-06 — Persistent accounts and meeting ownership
 
@@ -251,7 +239,6 @@
 - Data safety: created external database/configuration recovery copies, restored/rehearsed migration in the dedicated database, compared original fields before development migration and after test cleanup, and verified repeat bootstrap does not reset credentials/status. User created the rehearsal database because the development role cannot create databases. No database reset or original-key replacement.
 - Verification: 145 unit tests with lint/types/format; 13/13 database scenarios; repeated seed/fresh-process decryption; 12 positive + 12 negative access cases plus session/password/rate-limit checks; Webpack build; 63/63 browser tests at three widths; actual restart persistence and revoked-cookie rejection. Corrected trailing-slash routing, a rate-limit configuration interaction and test harness issues before passing runs. Default Turbopack failure and 14 dependency findings (including one critical Next.js finding) remain documented; no framework upgrade.
 - Human verification / next: student signs in using privately stored bootstrap credentials, replaces initial passwords, reviews owner/admin behavior and captures evidence manually. Remaining KKS infrastructure controls, crypto key separation and final Tugas 2 evidence are separate work. No automated captures, Git mutations or release/deployment claims. Credentials/tokens/hashes never printed in logs or included in this record.
-
 
 ### 2026-11-06 — Tugas 2 scenario/result tables
 
@@ -273,3 +260,20 @@
 
 - OpenAI Codex — Core Software Engineer. User requested hardened images, fixes for the critical baseline findings, after-scan and SBOM. Updated Next.js and its lint config to 16.4.5, built a standalone runtime on pinned Debian 13, and set up a separate synthetic Compose lab. Replaced the rejected Debian PostgreSQL candidate with a pinned Alpine image omitting the unused `gosu` binary.
 - Verification: both exact running images scanned with zero critical findings using the same Trivy database as the baseline. Saved two after reports and CycloneDX SBOMs. Both runtime processes are non-root with zero effective capabilities, no new privileges, read-only root filesystems, and no published ports. Applied migrations to isolated lab databases, seeded synthetic records, verified the homepage and unauthenticated redirect, and reran 12 positive plus 12 negative access cases. Student review, manual screenshots, and Git publication remain separate.
+
+### 2026-11-13 — Module 7 Debugging & Code Review Practicum (`praktikum/modul-07`)
+
+- Tool / Agent: Antigravity (Lead Software Engineer).
+- Purpose / prompt: Implement the approved Module 7 practicum plan on `praktikum/modul-07`, adapting the four AI-code bug scenarios and fixes to PrivateSession's `/meetings` workflow (`MeetingSession`, `TranscriptSegment`, and encrypted review notes) and authoring `docs/praktikum/modul-07.md` aligned with Part H and Tabel 6.
+- Output used: Development-only Prisma query logging in `lib/prisma.ts`, Zod 4 `z.stringbool()` for `returnToDetail` and deletion confirmations in `lib/meetings/schema.ts`, `redirect()` outside `try/catch` and `P2025` deletion error forwarding in `app/meetings/actions.ts`, route error boundary `app/meetings/[id]/error.tsx` with `error.digest` and `retry()`, derived character counter (`remaining`) + `<select>` support + server `digest` rethrow in `components/meetings/meeting-form.tsx`, new unit tests in `tests/database/meetings.test.ts`, and `docs/praktikum/modul-07.md`.
+- Adjustments / fixes: Replaced initial non-distributive `Omit<Extract<...>>` type helper in `lib/meetings/schema.ts` with distributive conditional `CompatCommand<T>` so `sessionId` remained preserved on `deleteSegment`; noted that local `node_modules` had Next.js `16.4.0` installed while `package.json` specifies `16.4.5`.
+- Verification: `npm --prefix meeting-companion run check` passed ESLint, `tsc --noEmit`, 147/147 Vitest tests across 12 files (including 33 tests in `tests/database/meetings.test.ts`), and Prettier `format:check`. `npm --prefix meeting-companion run build -- --webpack` succeeded cleanly with `/meetings/[id]` and its error boundary.
+- Human verification / remaining scope: Manual debugger/DevTools/React DevTools screenshot captures, GitHub Issues (`#1`–`#4`), peer PR review exchange, and Git staging/commits/pushes remain with the student. No Git mutations, database resets, or automatic screenshots were performed.
+
+### 2026-11-14 — Module 7 Peer Review Fixes (`PrivateSession#7`) & CI Lockfile Sync
+
+- Tool / Agent: Antigravity (Lead Software Engineer).
+- Purpose / prompt: Inspect partner peer review on `https://github.com/xvasgit/PrivateSession/pull/7` (`@PradanaAkbarRazan`), update `docs/praktikum/modul-07.md` Section 5.2, apply all suggested code/logging refinements, and resolve the GitHub Actions `npm ci` lockfile failure without creating Git commits.
+- Output used: Updated `lib/prisma.ts` to gate development `"query"` logging behind `process.env.PRISMA_QUERY_LOG === "true"` (`["warn", "error"]` by default in dev) and injected `"PRISMA_QUERY_LOG": "true"` in `.vscode/launch.json`; updated `components/meetings/meeting-form.tsx` to key `<TextareaField key={field.value ?? ""} ... />` for meeting-switch resets without `useEffect` and to rethrow the direct `P2025` deletion `Error` message alongside `digest` errors in `MeetingActionForm`; synchronized `package-lock.json` via `npx --yes npm@11 install --package-lock-only --ignore-scripts`; completed `docs/praktikum/modul-07.md` (PR link, commit hashes `ca129df`/`956062c`/`d225793`, Section 5.2 review table, Section 6 item 4).
+- Verification: `npm ci --dry-run` (local `npm 11.6.2`), `npx --yes npm@11 ci --dry-run`, and `npx --yes npm@latest ci --dry-run` (`npm v12.2.2`) exited with code 0 after lockfile sync (earlier `npm@12.2.2` had failed on missing `@emnapi/runtime@1.11.3` and `@emnapi/core@1.11.3`). Prettier formatting, `npm --prefix meeting-companion run check` (ESLint, `tsc --noEmit`, 147/147 Vitest tests across 12 files, Prettier `format:check`), and `npm --prefix meeting-companion run build -- --webpack` passed (after the one-time Next.js `16.4.0` local `node_modules` advisory retry; `package.json` remains `16.4.5`).
+- Human verification / remaining scope: Student reviews changes, stages/commits/pushes updates to `praktikum/modul-07`, and confirms GitHub Actions passes on PR `#7`. No Git staging, commits, pushes, tags, or database mutations were performed.
