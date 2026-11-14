@@ -5,7 +5,10 @@
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev -- --inspect"
+      "command": "npm run dev -- --inspect",
+      "env": {
+        "PRISMA_QUERY_LOG": "true"
+      }
     },
     {
       "name": "Next.js: debug client-side",
@@ -19,6 +22,9 @@
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
       "runtimeArgs": ["--inspect"],
+      "env": {
+        "PRISMA_QUERY_LOG": "true"
+      },
       "skipFiles": ["<node_internals>/**"],
       "serverReadyAction": {
         "action": "debugWithChrome",

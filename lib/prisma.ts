@@ -15,7 +15,11 @@ export function getPrisma(): PrismaClient {
       connectionTimeoutMillis: 5000,
     }),
     log:
-      process.env.NODE_ENV === "development" ? ["query", "warn", "error"] : [],
+      process.env.NODE_ENV === "development"
+        ? process.env.PRISMA_QUERY_LOG === "true"
+          ? ["query", "warn", "error"]
+          : ["warn", "error"]
+        : [],
     errorFormat: "minimal",
   }));
 }

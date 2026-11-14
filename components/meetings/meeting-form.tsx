@@ -73,7 +73,12 @@ export function MeetingActionForm({
         return await saveMeetingCommand(previous, data);
       } catch (error) {
         unstable_rethrow(error);
-        if (error && typeof error === "object" && "digest" in error) {
+        if (
+          (error && typeof error === "object" && "digest" in error) ||
+          (error instanceof Error &&
+            error.message ===
+              "The meeting could not be deleted because it no longer exists.")
+        ) {
           throw error;
         }
         return {
@@ -115,7 +120,11 @@ export function MeetingActionForm({
                 {field.label}
               </label>
               {field.type === "textarea" ? (
-                <TextareaField field={field} shared={shared} />
+                <TextareaField
+                  key={field.value ?? ""}
+                  field={field}
+                  shared={shared}
+                />
               ) : field.type === "select" ? (
                 <select {...shared}>
                   {field.options?.map((option) => (
