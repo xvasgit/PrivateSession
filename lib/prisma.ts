@@ -14,7 +14,8 @@ export function getPrisma(): PrismaClient {
       connectionString: localDatabaseUrl(process.env.DATABASE_URL),
       connectionTimeoutMillis: 5000,
     }),
-    log: [],
+    log:
+      process.env.NODE_ENV === "development" ? ["query", "warn", "error"] : [],
     errorFormat: "minimal",
   }));
 }
